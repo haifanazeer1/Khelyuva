@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:khel_yuva/widgets/Login.dart';
 import 'package:khel_yuva/widgets/register.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const RegisterScreen(),
+      home: SigninScreen(),
     );
   }
 }
