@@ -1,135 +1,247 @@
 import 'package:flutter/material.dart';
-import 'package:khel_yuva/widgets/custom_text_input.dart';
+import 'package:khel_yuva/widgets/login.dart'; // adjust if needed
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
-
-  @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
-}
-
-class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController name = TextEditingController();
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
-  final TextEditingController confirmPassword = TextEditingController();
-  final TextEditingController branch = TextEditingController();
-  final TextEditingController rollno = TextEditingController();
-
-  void _registerUser() {
-    final String emailText = email.text.trim();
-    final String passwordText = password.text.trim();
-    final String confirmPasswordText = confirmPassword.text.trim();
-
-    if (emailText.isEmpty ||
-        passwordText.isEmpty ||
-        confirmPasswordText.isEmpty) {
-      _showMessage('Please fill in all fields.');
-      return;
-    }
-
-    if (passwordText != confirmPasswordText) {
-      _showMessage('Passwords do not match.');
-      return;
-    }
-
-    _showMessage('Registration successful!');
-  }
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
-
-  @override
-  void dispose() {
-    name.dispose();
-    email.dispose();
-    password.dispose();
-    confirmPassword.dispose();
-    branch.dispose();
-    rollno.dispose();
-    super.dispose();
-  }
+class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF0F0F1A),
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
-        title: const Text(
-          'KHELYUVA',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 13, 39, 68),
-        foregroundColor: Colors.white,
-      ),
+      backgroundColor: const Color(0xFF0F0F1A),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: const [
+            _RegisterHero(),
+            SizedBox(height: 40),
+            _RegisterForm(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////
+/// HERO SECTION (Matches Sign In)
+////////////////////////////////////////////////////////////
+
+class _RegisterHero extends StatelessWidget {
+  const _RegisterHero();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 80, 20, 40),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF1A1A3E), Color(0xFF0F0F1A)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF6C63FF), Color(0xFFE040FB)],
+              ),
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF6C63FF).withOpacity(0.4),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.person_add_alt_1_rounded,
+                color: Colors.white, size: 34),
+          ),
+          const SizedBox(height: 20),
+          RichText(
+            text: const TextSpan(
+              children: [
+                TextSpan(
+                  text: "Create ",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                TextSpan(
+                  text: "Account",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF6C63FF),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            "Join KhelYuva Today",
+            style: TextStyle(
+              color: Color(0xFF9090B0),
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////
+/// REGISTER FORM
+////////////////////////////////////////////////////////////
+
+class _RegisterForm extends StatefulWidget {
+  const _RegisterForm();
+
+  @override
+  State<_RegisterForm> createState() => _RegisterFormState();
+}
+
+class _RegisterFormState extends State<_RegisterForm> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A2E),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFF2A2A4A)),
+        ),
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(25.0),
-              child: Center(
-                child: Text(
-                  "Create An Account",
+            _buildField(
+              "Full Name",
+              Icons.person_outline_rounded,
+              nameController,
+            ),
+            const SizedBox(height: 18),
+            _buildField(
+              "Email",
+              Icons.mail_outline_rounded,
+              emailController,
+            ),
+            const SizedBox(height: 18),
+            _buildField(
+              "Password",
+              Icons.lock_outline_rounded,
+              passwordController,
+              isPassword: true,
+            ),
+            const SizedBox(height: 18),
+            _buildField(
+              "Confirm Password",
+              Icons.lock_outline_rounded,
+              confirmController,
+              isPassword: true,
+            ),
+            const SizedBox(height: 30),
+
+            /// SIGN UP BUTTON
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6C63FF),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  elevation: 0,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SignInScreen()),
+                  );
+                },
+                child: const Text(
+                  "Sign Up",
                   style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 30,
-                    color: const Color.fromARGB(255, 13, 43, 68),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ),
             ),
-            CustomTextInput(
-              controller: name,
-              icon: const Icon(Icons.person),
-              hint: 'Enter your full name',
-              isObscure: false,
-            ),
-            CustomTextInput(
-              controller: email,
-              icon: const Icon(Icons.email),
-              hint: 'Enter your email',
-              isObscure: false,
-            ),
-            CustomTextInput(
-              controller: password,
-              icon: const Icon(Icons.password),
-              hint: 'Enter your password',
-              isObscure: true,
-            ),
-            CustomTextInput(
-              controller: confirmPassword,
-              icon: const Icon(Icons.password),
-              hint: 'Confirm your password',
-              isObscure: true,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 13, 43, 68),
-                    foregroundColor: Colors.white,
-                  ),
-                  onPressed: _registerUser,
-                  child: const Text('Sign Up'),
+
+            const SizedBox(height: 20),
+
+            /// BACK TO LOGIN
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Already have an account?",
+                  style: TextStyle(color: Color(0xFF9090B0)),
                 ),
-              ),
-            ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SignInScreen()),
+                    );
+                  },
+                  child: const Text(
+                    "Login",
+                    style: TextStyle(
+                      color: Color(0xFF6C63FF),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              ],
+            )
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildField(
+      String hint, IconData icon, TextEditingController controller,
+      {bool isPassword = false}) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon, color: const Color(0xFF6C63FF)),
+        hintText: hint,
+        hintStyle: const TextStyle(color: Color(0xFF9090B0)),
+        filled: true,
+        fillColor: const Color(0xFF141428),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFF2A2A4A)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFF2A2A4A)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFF6C63FF), width: 1.5),
         ),
       ),
     );

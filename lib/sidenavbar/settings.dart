@@ -42,46 +42,22 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: _bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF102E66),
+        backgroundColor: _bg,
         elevation: 0,
-        centerTitle: true,
+        leading: IconButton(
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: _textPrimary),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: const Text(
-          "LEADERBOARD",
+          'Settings',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
+            color: _textPrimary,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(30),
-              onTap: () {
-                // Navigate to profile/settings page
-                // Navigator.push(context,
-                //   MaterialPageRoute(builder: (_) => const SettingsPage()));
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF6C63FF), Color(0xFFE040FB)],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.person_rounded,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-            ),
-          ),
-        ],
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
