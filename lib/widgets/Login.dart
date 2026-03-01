@@ -54,15 +54,15 @@ class SigninScreen extends StatelessWidget {
                   onPressed: () {},
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: //[
-                    //  Image.asset(
-                      //  'assets/google.png',
-                       // width: 24,
-                       // height: 15,
-                      //),
-                      //const SizedBox(width: 8),
-                      //const Text('Sign in with Google'),
-                    //],
+                    children: [
+                      Image.asset(
+                        'assets/google.png',
+                        width: 24,
+                        height: 15,
+                      ),
+                      const SizedBox(width: 8),
+                      const Text('Sign in with Google'),
+                    ],
                   ),
                 ),
               ),
