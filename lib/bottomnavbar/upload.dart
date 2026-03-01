@@ -97,6 +97,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF0F0F1A),
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text(

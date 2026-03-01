@@ -22,10 +22,37 @@ class LeaderboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF0F0F1A),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF102E66),
+        backgroundColor: const Color(0xFF0F0F1A),
         elevation: 0,
         centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: () {
+              // Navigate to profile/settings page
+              // Navigator.push(context,
+              //   MaterialPageRoute(builder: (_) => const SettingsPage()));
+            },
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF6C63FF), Color(0xFFE040FB)],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.person_rounded,
+                color: Colors.white,
+                size: 22,
+              ),
+            ),
+          ),
+        ),
         title: const Text(
           "LEADERBOARD",
           style: TextStyle(
@@ -168,7 +195,7 @@ class LeaderTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFF0F0F1A),
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
           BoxShadow(
@@ -202,6 +229,7 @@ class LeaderTile extends StatelessWidget {
             child: Text(
               name,
               style: const TextStyle(
+                color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -210,6 +238,7 @@ class LeaderTile extends StatelessWidget {
           Text(
             points,
             style: const TextStyle(
+              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),

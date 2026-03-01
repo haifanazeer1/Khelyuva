@@ -10,6 +10,7 @@ class SigninScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF0F0F1A),
       appBar: AppBar(
         title: const Text(
           'KhelYuva',
@@ -31,7 +32,7 @@ class SigninScreen extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 30,
-                color: const Color.fromARGB(255, 13, 43, 68),
+                color: Colors.white,
               ),
               textAlign: TextAlign.center,
             ),
