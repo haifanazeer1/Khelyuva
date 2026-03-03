@@ -7,7 +7,7 @@ void main() {
 }
 
 class KhelYuva extends StatelessWidget {
-  const KhelYuva({Key? key}) : super(key: key);
+  const KhelYuva({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class KhelYuva extends StatelessWidget {
 
 // ── Dashboard State ───────────────────────────────────────────────────────────
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -390,7 +390,7 @@ class _LogSheet extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.15),
+                    color: iconColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(icon, color: iconColor, size: 22),
@@ -646,7 +646,7 @@ class _NotificationsSheet extends StatelessWidget {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: n.$2.withOpacity(0.15),
+                        color: n.$2.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(n.$1, color: n.$2, size: 20),
@@ -797,9 +797,10 @@ class _TodayHeader extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColor.red.withOpacity(0.12),
+                  color: AppColor.red.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColor.red.withOpacity(0.3)),
+                  border:
+                      Border.all(color: AppColor.red.withValues(alpha: 0.3)),
                 ),
                 child: const Text('Reset',
                     style: TextStyle(
@@ -815,9 +816,10 @@ class _TodayHeader extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColor.accent.withOpacity(0.15),
+                  color: AppColor.accent.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColor.accent.withOpacity(0.3)),
+                  border:
+                      Border.all(color: AppColor.accent.withValues(alpha: 0.3)),
                 ),
                 child: const Text('Edit',
                     style: TextStyle(
@@ -876,7 +878,7 @@ class _ExerciseCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColor.accent.withOpacity(0.15),
+                  color: AppColor.accent.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text('Today',
@@ -1000,7 +1002,7 @@ class _StatRow extends StatelessWidget {
           width: 34,
           height: 34,
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.12),
+            color: iconColor.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(9),
           ),
           child: Icon(icon, color: iconColor, size: 17),
@@ -1131,7 +1133,7 @@ class _MiniStatCard extends StatelessWidget {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.15),
+                    color: iconColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Icon(Icons.add, color: iconColor, size: 16),
@@ -1145,7 +1147,7 @@ class _MiniStatCard extends StatelessWidget {
                 width: 34,
                 height: 34,
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.12),
+                  color: iconColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(9),
                 ),
                 child: Icon(icon, color: iconColor, size: 18),
@@ -1215,7 +1217,7 @@ class _ProgressChart extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColor.accent.withOpacity(0.15),
+                  color: AppColor.accent.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text('This Week',
@@ -1237,12 +1239,12 @@ class _ProgressChart extends StatelessWidget {
                 minY: 40,
                 maxY: 90,
                 titlesData: FlTitlesData(
-                  leftTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
@@ -1284,8 +1286,8 @@ class _ProgressChart extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          AppColor.accent.withOpacity(0.25),
-                          AppColor.accent.withOpacity(0.0),
+                          AppColor.accent.withValues(alpha: 0.25),
+                          AppColor.accent.withValues(alpha: 0.0),
                         ],
                       ),
                     ),
@@ -1338,10 +1340,10 @@ class _AIStatusCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColor.card,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColor.accent.withOpacity(0.3)),
+        border: Border.all(color: AppColor.accent.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: AppColor.accent.withOpacity(0.07),
+            color: AppColor.accent.withValues(alpha: 0.07),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -1357,7 +1359,7 @@ class _AIStatusCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: AppColor.accent.withOpacity(0.15),
+                  color: AppColor.accent.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.smart_toy_rounded,
@@ -1389,8 +1391,8 @@ class _AIStatusCard extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   color: allActive
-                      ? AppColor.teal.withOpacity(0.15)
-                      : AppColor.amber.withOpacity(0.15),
+                      ? AppColor.teal.withValues(alpha: 0.15)
+                      : AppColor.amber.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -1460,7 +1462,7 @@ class _AIToggleRow extends StatelessWidget {
           width: 34,
           height: 34,
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.12),
+            color: iconColor.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(9),
           ),
           child: Icon(icon, color: iconColor, size: 17),
@@ -1475,7 +1477,7 @@ class _AIToggleRow extends StatelessWidget {
           child: Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: AppColor.accent,
+            activeThumbColor: AppColor.accent,
             inactiveThumbColor: AppColor.textSecondary,
             inactiveTrackColor: AppColor.border,
           ),

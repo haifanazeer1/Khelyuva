@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:khel_yuva/res/colors.dart';
 
 void main() {
   runApp(const KhelYuvaApp());
@@ -8,7 +9,7 @@ void main() {
 //  APP ROOT
 // ─────────────────────────────────────────────
 class KhelYuvaApp extends StatelessWidget {
-  const KhelYuvaApp({Key? key}) : super(key: key);
+  const KhelYuvaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,42 +27,10 @@ class KhelYuvaApp extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────
-//  DESIGN TOKENS
-// ─────────────────────────────────────────────
-class KY {
-  static const Color bg = Color(0xFF0D0F1A);
-  static const Color surface = Color(0xFF161928);
-  static const Color card = Color(0xFF1E2236);
-  static const Color accent = Color(0xFF00E5FF);
-  static const Color green = Color(0xFF00E676);
-  static const Color orange = Color(0xFFFF6D00);
-  static const Color purple = Color(0xFF7C4DFF);
-  static const Color textPri = Color(0xFFFFFFFF);
-  static const Color textSec = Color(0xFF8892A4);
-  static const Color divider = Color(0xFF252A3D);
-
-  static const gradientAccent = LinearGradient(
-    colors: [Color(0xFF00E5FF), Color(0xFF7C4DFF)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  static const gradientFire = LinearGradient(
-    colors: [Color(0xFFFF6D00), Color(0xFFFF1744)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  static const gradientGreen = LinearGradient(
-    colors: [Color(0xFF00E676), Color(0xFF00BFA5)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-}
-
-// ─────────────────────────────────────────────
 //  HOME PAGE
 // ─────────────────────────────────────────────
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -144,7 +113,7 @@ class _HomePageState extends State<HomePage>
                   gradient: KY.gradientAccent,
                   boxShadow: [
                     BoxShadow(
-                      color: KY.accent.withOpacity(0.35),
+                      color: KY.accent.withValues(alpha: 0.35),
                       blurRadius: 12,
                       spreadRadius: 2,
                     )
@@ -182,7 +151,7 @@ class _HomePageState extends State<HomePage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Good Morning, Arjun 👋',
+                const Text('Hello Haifa 👋',
                     style: TextStyle(color: KY.textSec, fontSize: 12)),
                 RichText(
                   text: const TextSpan(
@@ -216,7 +185,7 @@ class _HomePageState extends State<HomePage>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                    color: KY.orange.withOpacity(0.4),
+                    color: KY.orange.withValues(alpha: 0.4),
                     blurRadius: 10,
                     spreadRadius: 1)
               ],
@@ -277,7 +246,7 @@ class _HomePageState extends State<HomePage>
             ),
             boxShadow: [
               BoxShadow(
-                  color: KY.purple.withOpacity(0.3),
+                  color: KY.purple.withValues(alpha: 0.3),
                   blurRadius: 24,
                   offset: const Offset(0, 8))
             ],
@@ -294,7 +263,7 @@ class _HomePageState extends State<HomePage>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: RadialGradient(colors: [
-                      KY.accent.withOpacity(0.15),
+                      KY.accent.withValues(alpha: 0.15),
                       Colors.transparent
                     ]),
                   ),
@@ -309,7 +278,7 @@ class _HomePageState extends State<HomePage>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: RadialGradient(colors: [
-                      KY.purple.withOpacity(0.2),
+                      KY.purple.withValues(alpha: 0.2),
                       Colors.transparent
                     ]),
                   ),
@@ -332,10 +301,10 @@ class _HomePageState extends State<HomePage>
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: KY.accent.withOpacity(0.15),
+                              color: KY.accent.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(20),
-                              border:
-                                  Border.all(color: KY.accent.withOpacity(0.4)),
+                              border: Border.all(
+                                  color: KY.accent.withValues(alpha: 0.4)),
                             ),
                             child: const Text('AI POWERED TRAINING',
                                 style: TextStyle(
@@ -365,7 +334,7 @@ class _HomePageState extends State<HomePage>
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: KY.accent.withOpacity(0.4),
+                                      color: KY.accent.withValues(alpha: 0.4),
                                       blurRadius: 12,
                                       offset: const Offset(0, 4))
                                 ],
@@ -389,9 +358,10 @@ class _HomePageState extends State<HomePage>
                         height: 86,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: KY.accent.withOpacity(0.1),
+                          color: KY.accent.withValues(alpha: 0.1),
                           border: Border.all(
-                              color: KY.accent.withOpacity(0.5), width: 2),
+                              color: KY.accent.withValues(alpha: 0.5),
+                              width: 2),
                         ),
                         child: const Icon(Icons.videocam_rounded,
                             color: KY.accent, size: 38),
@@ -487,8 +457,8 @@ class _HomePageState extends State<HomePage>
                   fontSize: 16,
                   fontWeight: FontWeight.bold)),
           Text('See All',
-              style:
-                  TextStyle(color: KY.accent.withOpacity(0.8), fontSize: 12)),
+              style: TextStyle(
+                  color: KY.accent.withValues(alpha: 0.8), fontSize: 12)),
         ],
       ),
     );
@@ -542,10 +512,10 @@ class _HomePageState extends State<HomePage>
             margin: const EdgeInsets.only(right: 12),
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: done ? color.withOpacity(0.15) : KY.card,
+              color: done ? color.withValues(alpha: 0.15) : KY.card,
               borderRadius: BorderRadius.circular(18),
-              border:
-                  Border.all(color: done ? color.withOpacity(0.5) : KY.divider),
+              border: Border.all(
+                  color: done ? color.withValues(alpha: 0.5) : KY.divider),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -563,7 +533,7 @@ class _HomePageState extends State<HomePage>
                         width: 20,
                         height: 20,
                         decoration: BoxDecoration(
-                            color: color.withOpacity(0.2),
+                            color: color.withValues(alpha: 0.2),
                             shape: BoxShape.circle),
                         child: Icon(Icons.check, color: color, size: 12),
                       ),
@@ -580,7 +550,7 @@ class _HomePageState extends State<HomePage>
                     style: TextStyle(color: color, fontSize: 11)),
                 const SizedBox(height: 4),
                 Row(children: [
-                  Icon(Icons.timer_outlined, color: KY.textSec, size: 12),
+                  const Icon(Icons.timer_outlined, color: KY.textSec, size: 12),
                   const SizedBox(width: 4),
                   Text(w['duration'] as String,
                       style: const TextStyle(color: KY.textSec, fontSize: 11)),
@@ -640,7 +610,7 @@ class _HomePageState extends State<HomePage>
       },
     ];
 
-    int _selectedSport = 0;
+    int selectedSport = 0;
 
     return StatefulBuilder(
       builder: (context, setLocalState) {
@@ -653,10 +623,10 @@ class _HomePageState extends State<HomePage>
             itemBuilder: (context, i) {
               final s = sports[i];
               final color = s['color'] as Color;
-              final selected = _selectedSport == i;
+              final selected = selectedSport == i;
 
               return GestureDetector(
-                onTap: () => setLocalState(() => _selectedSport = i),
+                onTap: () => setLocalState(() => selectedSport = i),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
                   curve: Curves.easeOut,
@@ -664,7 +634,7 @@ class _HomePageState extends State<HomePage>
                   margin: const EdgeInsets.only(right: 12),
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: selected ? color.withOpacity(0.18) : KY.card,
+                    color: selected ? color.withValues(alpha: 0.18) : KY.card,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: selected ? color : KY.divider,
@@ -673,7 +643,7 @@ class _HomePageState extends State<HomePage>
                     boxShadow: selected
                         ? [
                             BoxShadow(
-                                color: color.withOpacity(0.25),
+                                color: color.withValues(alpha: 0.25),
                                 blurRadius: 14,
                                 offset: const Offset(0, 4))
                           ]
@@ -686,7 +656,8 @@ class _HomePageState extends State<HomePage>
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: color.withOpacity(selected ? 0.25 : 0.12),
+                          color:
+                              color.withValues(alpha: selected ? 0.25 : 0.12),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child:
@@ -710,7 +681,7 @@ class _HomePageState extends State<HomePage>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 7, vertical: 3),
                         decoration: BoxDecoration(
-                          color: color.withOpacity(0.15),
+                          color: color.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(s['tag'] as String,
@@ -774,9 +745,9 @@ class _HomePageState extends State<HomePage>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: KY.green.withOpacity(0.15),
+                  color: KY.green.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: KY.green.withOpacity(0.4)),
+                  border: Border.all(color: KY.green.withValues(alpha: 0.4)),
                 ),
                 child: const Text('Good',
                     style: TextStyle(
@@ -801,9 +772,9 @@ class _HomePageState extends State<HomePage>
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: KY.accent.withOpacity(0.07),
+                color: KY.accent.withValues(alpha: 0.07),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: KY.accent.withOpacity(0.2)),
+                border: Border.all(color: KY.accent.withValues(alpha: 0.2)),
               ),
               child: const Row(children: [
                 Icon(Icons.lightbulb_outline, color: KY.accent, size: 18),
@@ -851,9 +822,9 @@ class _HomePageState extends State<HomePage>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.35)),
+        border: Border.all(color: color.withValues(alpha: 0.35)),
       ),
       child: Text(text,
           style: TextStyle(
@@ -944,7 +915,7 @@ class _HomePageState extends State<HomePage>
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: gradient.colors.first.withOpacity(0.3),
+            color: gradient.colors.first.withValues(alpha: 0.3),
             blurRadius: 16,
             offset: const Offset(0, 6),
           )
@@ -963,7 +934,7 @@ class _HomePageState extends State<HomePage>
           const SizedBox(height: 2),
           Text(sublabel,
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.75), fontSize: 11)),
+                  color: Colors.white.withValues(alpha: 0.75), fontSize: 11)),
         ]),
       ]),
     );
@@ -1009,11 +980,12 @@ class _HomePageState extends State<HomePage>
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: isMe ? KY.accent.withOpacity(0.1) : KY.surface,
+                color: isMe ? KY.accent.withValues(alpha: 0.1) : KY.surface,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                    color:
-                        isMe ? KY.accent.withOpacity(0.4) : Colors.transparent),
+                    color: isMe
+                        ? KY.accent.withValues(alpha: 0.4)
+                        : Colors.transparent),
               ),
               child: Row(children: [
                 Text(medal, style: const TextStyle(fontSize: 18)),
@@ -1021,7 +993,7 @@ class _HomePageState extends State<HomePage>
                 CircleAvatar(
                   radius: 16,
                   backgroundColor:
-                      isMe ? KY.accent.withOpacity(0.2) : KY.divider,
+                      isMe ? KY.accent.withValues(alpha: 0.2) : KY.divider,
                   child: Text(
                     (p['name'] as String)[0],
                     style: TextStyle(
@@ -1050,7 +1022,8 @@ class _HomePageState extends State<HomePage>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: isMe ? KY.accent.withOpacity(0.15) : KY.divider,
+                    color:
+                        isMe ? KY.accent.withValues(alpha: 0.15) : KY.divider,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text('${p['score']} pts',
@@ -1111,9 +1084,9 @@ class _HomePageState extends State<HomePage>
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: KY.green.withOpacity(0.15),
+                color: KY.green.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: KY.green.withOpacity(0.4)),
+                border: Border.all(color: KY.green.withValues(alpha: 0.4)),
               ),
               child: const Icon(Icons.smart_toy_rounded,
                   color: KY.green, size: 22),
@@ -1133,7 +1106,7 @@ class _HomePageState extends State<HomePage>
                 ],
               ),
             ),
-            _PulsingDot(color: KY.green),
+            const _PulsingDot(color: KY.green),
             const SizedBox(width: 6),
             const Text('Online',
                 style: TextStyle(
@@ -1160,7 +1133,7 @@ class _HomePageState extends State<HomePage>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.12),
+                    color: color.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(f['status'] as String,
@@ -1171,7 +1144,7 @@ class _HomePageState extends State<HomePage>
                 ),
               ]),
             );
-          }).toList(),
+          })
         ]),
       ),
     );
@@ -1228,7 +1201,7 @@ class _HomePageState extends State<HomePage>
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-              color: KY.accent.withOpacity(0.5),
+              color: KY.accent.withValues(alpha: 0.5),
               blurRadius: 16,
               spreadRadius: 2)
         ],
@@ -1246,7 +1219,8 @@ class _HomePageState extends State<HomePage>
 // ─────────────────────────────────────────────
 class _PulsingDot extends StatefulWidget {
   final Color color;
-  const _PulsingDot({Key? key, required this.color}) : super(key: key);
+  // ignore: unused_element_parameter
+  const _PulsingDot({super.key, required this.color});
 
   @override
   State<_PulsingDot> createState() => _PulsingDotState();

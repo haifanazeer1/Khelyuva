@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AboutUsPage extends StatelessWidget {
-  const AboutUsPage({Key? key}) : super(key: key);
+  const AboutUsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +134,7 @@ class _HeroSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF6C63FF).withOpacity(0.4),
+                  color: const Color(0xFF6C63FF).withValues(alpha: 0.4),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -303,7 +303,7 @@ class _FeaturesSection extends StatelessWidget {
                   color: const Color(0xFF1A1A2E),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: color.withOpacity(0.3),
+                    color: color.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -313,7 +313,7 @@ class _FeaturesSection extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.15),
+                        color: color.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(icon, color: color, size: 22),
@@ -355,7 +355,8 @@ class _QuoteSection extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFF6C63FF).withOpacity(0.3)),
+          border:
+              Border.all(color: const Color(0xFF6C63FF).withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -378,7 +379,7 @@ class _QuoteSection extends StatelessWidget {
             Container(
               height: 1,
               width: 60,
-              color: const Color(0xFF6C63FF).withOpacity(0.5),
+              color: const Color(0xFF6C63FF).withValues(alpha: 0.5),
             ),
           ],
         ),
@@ -397,14 +398,14 @@ class DeveloperCard extends StatelessWidget {
   final Color avatarColor;
 
   const DeveloperCard({
-    Key? key,
+    super.key,
     required this.name,
     required this.initials,
     required this.year,
     required this.college,
     required this.description,
     required this.avatarColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -414,12 +415,12 @@ class DeveloperCard extends StatelessWidget {
         color: const Color(0xFF1A1A2E),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: avatarColor.withOpacity(0.25),
+          color: avatarColor.withValues(alpha: 0.25),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: avatarColor.withOpacity(0.08),
+            color: avatarColor.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -434,7 +435,7 @@ class DeveloperCard extends StatelessWidget {
             height: 52,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [avatarColor, avatarColor.withOpacity(0.6)],
+                colors: [avatarColor, avatarColor.withValues(alpha: 0.6)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -474,7 +475,7 @@ class DeveloperCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: avatarColor.withOpacity(0.15),
+                        color: avatarColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
