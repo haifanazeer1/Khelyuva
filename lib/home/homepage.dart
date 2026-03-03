@@ -1,34 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:khel_yuva/bottomnavbar/upload.dart';
+import 'package:khel_yuva/main.dart';
 import 'package:khel_yuva/res/colors.dart';
+import 'package:khel_yuva/bottomnavbar/upload.dart';
+import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
+import 'package:khel_yuva/sidenavbar/aboutus.dart';
+import 'package:khel_yuva/sidenavbar/profile.dart';
+import 'package:khel_yuva/sidenavbar/settings.dart';
+import 'package:khel_yuva/bottomnavbar/progresspage.dart';
+import 'package:khel_yuva/widgets/Login.dart';
 
-void main() {
-  runApp(const KhelYuvaApp());
+class KY {
+  static const Color bg = Color(0xFF0D0F1A);
+  static const Color surface = Color(0xFF161928);
+  static const Color card = Color(0xFF1E2236);
+  static const Color accent = Color(0xFF00E5FF);
+  static const Color green = Color(0xFF00E676);
+  static const Color orange = Color(0xFFFF6D00);
+  static const Color purple = Color(0xFF7C4DFF);
+  static const Color textPri = Color(0xFFFFFFFF);
+  static const Color textSec = Color(0xFF8892A4);
+  static const Color divider = Color(0xFF252A3D);
+
+  static const gradientAccent = LinearGradient(
+    colors: [Color(0xFF00E5FF), Color(0xFF7C4DFF)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const gradientFire = LinearGradient(
+    colors: [Color(0xFFFF6D00), Color(0xFFFF1744)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const gradientGreen = LinearGradient(
+    colors: [Color(0xFF00E676), Color(0xFF00BFA5)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }
 
-// ─────────────────────────────────────────────
-//  APP ROOT
-// ─────────────────────────────────────────────
-class KhelYuvaApp extends StatelessWidget {
-  const KhelYuvaApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'KhelYuva',
-      theme: ThemeData(
-        fontFamily: 'Roboto',
-        scaffoldBackgroundColor: KY.bg,
-        colorScheme: const ColorScheme.dark(primary: KY.accent),
-      ),
-      home: const HomePage(),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-//  HOME PAGE
-// ─────────────────────────────────────────────
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -39,56 +49,48 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   int _navIndex = 0;
+
   late AnimationController _pulseController;
   late Animation<double> _pulseAnim;
+
+  late List<Widget> _pages; // 🔥 Important: NOT const
 
   @override
   void initState() {
     super.initState();
+
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
+
     _pulseAnim = Tween<double>(begin: 0.92, end: 1.08).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
-  }
 
-  @override
-  void dispose() {
-    _pulseController.dispose();
-    super.dispose();
+    // 🔥 Pages list moved here
+    _pages = [
+      _buildHomeContent(), // Your full UI
+      const LeaderboardScreen(),
+      const UploadFormScreen(),
+      const ProgressPage(),
+      ProfilePage(),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KY.bg,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: 100),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              _buildHeroBanner(),
-              _buildQuickStats(),
-              _buildSectionTitle("Today's Workout Plan"),
-              _buildWorkoutPlan(),
-              _buildSectionTitle("Choose a Sport to Play"),
-              _buildSportsPicker(),
-              _buildSectionTitle("AI Performance Feedback"),
-              _buildAIFeedbackCard(),
-              _buildSectionTitle("Analyse Your Form"),
-              _buildVideoAnalysisSection(),
-              _buildSectionTitle("Leaderboard"),
-              _buildLeaderboard(),
-              _buildSectionTitle("Offline AI Status"),
-              _buildAIStatusCard(),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
+      appBar: AppBar(
+        backgroundColor: KY.surface,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      drawer: _buildDrawer(), // 🔥 Drawer added
+      body: IndexedStack(
+        index: _navIndex,
+        children: _pages,
       ),
       bottomNavigationBar: _buildBottomNav(),
       floatingActionButton: _buildFAB(),
@@ -96,7 +98,35 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── HEADER ───────────────────────────────────
+  Widget _buildHomeContent() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 100),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            _buildHeroBanner(),
+            _buildQuickStats(),
+            _buildSectionTitle("Today's Workout Plan"),
+            _buildWorkoutPlan(),
+            _buildSectionTitle("Choose a Sport to Play"),
+            _buildSportsPicker(),
+            _buildSectionTitle("AI Performance Feedback"),
+            _buildAIFeedbackCard(),
+            _buildSectionTitle("Analyse Your Form"),
+            _buildVideoAnalysisSection(),
+            _buildSectionTitle("Leaderboard"),
+            _buildLeaderboard(),
+            _buildSectionTitle("Offline AI Status"),
+            _buildAIStatusCard(),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
@@ -1162,7 +1192,7 @@ class _HomePageState extends State<HomePage>
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _navItem(Icons.home_rounded, 'Home', 0),
-            _navItem(Icons.bar_chart_rounded, 'Progress', 1),
+            _navItem(Icons.bar_chart_rounded, 'LeaderBoard', 1),
             const SizedBox(width: 48),
             _navItem(Icons.emoji_events_rounded, 'Ranks', 3),
             _navItem(Icons.person_rounded, 'Profile', 4),
@@ -1208,8 +1238,95 @@ class _HomePageState extends State<HomePage>
       ),
       child: IconButton(
         icon: const Icon(Icons.add_rounded, color: Colors.black, size: 30),
-        onPressed: () {},
+        onPressed: () {
+          setState(() {
+            _navIndex = 2; // Upload screen index
+          });
+        },
       ),
+    );
+  }
+
+  Widget _buildDrawer() {
+    return Drawer(
+      backgroundColor: KY.surface,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: KY.gradientAccent,
+            ),
+            child: const Row(
+              children: [
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: Colors.black,
+                  child:
+                      Icon(Icons.person_rounded, color: Colors.white, size: 28),
+                ),
+                SizedBox(width: 14),
+                Text(
+                  "Name",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          _drawerItem(Icons.home_rounded, "Home", 0),
+          _drawerItem(Icons.person_outline_rounded, "Profile", 4),
+          const Divider(color: KY.divider),
+          ListTile(
+            leading: const Icon(Icons.info_outline_rounded, color: KY.accent),
+            title:
+                const Text("About Us", style: TextStyle(color: Colors.white)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const AboutUsPage()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings_outlined, color: KY.accent),
+            title:
+                const Text("Settings", style: TextStyle(color: Colors.white)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const SettingsPage()));
+            },
+          ),
+          const Spacer(),
+          const Divider(color: KY.divider),
+          ListTile(
+            leading: const Icon(Icons.logout_rounded, color: Colors.redAccent),
+            title:
+                const Text("Logout", style: TextStyle(color: Colors.redAccent)),
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => SignInScreen()),
+                (route) => false,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _drawerItem(IconData icon, String title, int index) {
+    return ListTile(
+      leading: Icon(icon, color: KY.accent),
+      title: Text(title, style: const TextStyle(color: Colors.white)),
+      onTap: () {
+        Navigator.pop(context);
+        setState(() => _navIndex = index);
+      },
     );
   }
 }

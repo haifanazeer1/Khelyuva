@@ -22,73 +22,52 @@ class LeaderboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF102E66),
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          "LEADERBOARD",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
+      backgroundColor: const Color(0xFF0B1023),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF0B1023),
+              Color(0xFF11183C),
+              Color(0xFF1A0F3C),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-      ),
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF0A1F44), Color(0xFF102E66)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
+        child: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
 
-              // PODIUM
+              // HEADER
+              const Text(
+                "LEADERBOARD",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                  shadows: [
+                    Shadow(
+                      color: Colors.cyanAccent,
+                      blurRadius: 15,
+                    )
+                  ],
+                ),
+              ),
+
               const PodiumSection(),
 
-              const SizedBox(height: 30),
-
-              // LEADER LIST
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: const [
-                    LeaderTile(
-                      medalColor: Colors.amber,
-                      medalText: "1",
-                      name: "Mia",
-                      points: "2,000 points",
-                    ),
-                    LeaderTile(
-                      medalColor: Colors.grey,
-                      medalText: "2",
-                      name: "Brain",
-                      points: "1,700 points",
-                    ),
-                    LeaderTile(
-                      medalColor: Color(0xFFCD7F32),
-                      medalText: "3",
-                      name: "Jake",
-                      points: "1,500 points",
-                    ),
-                    LeaderTile(
-                      medalColor: Colors.amber,
-                      medalText: "",
-                      name: "Tony",
-                      points: "1,300 points",
-                    ),
-                    LeaderTile(
-                      medalColor: Colors.amber,
-                      medalText: "",
-                      name: "Nat",
-                      points: "1,100 points",
-                    ),
+                    LeaderTile(rank: "1", name: "Mia", points: "2,000 pts"),
+                    LeaderTile(rank: "2", name: "Brain", points: "1,700 pts"),
+                    LeaderTile(rank: "3", name: "Jake", points: "1,500 pts"),
+                    LeaderTile(rank: "4", name: "Tony", points: "1,300 pts"),
+                    LeaderTile(rank: "5", name: "Nat", points: "1,100 pts"),
                   ],
                 ),
               ),
@@ -106,58 +85,126 @@ class PodiumSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: 160,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          podiumBox("2", 80, Colors.orange),
-          const SizedBox(width: 15),
-          podiumBox("1", 120, Colors.blue),
-          const SizedBox(width: 15),
-          podiumBox("3", 60, Colors.deepOrange),
+          // 2nd Position
+          Container(
+            width: 70,
+            height: 80,
+            decoration: const BoxDecoration(
+              color: Colors.orange,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+              ),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              "2",
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+          ),
+
+          // 1st Position
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Icon(Icons.star, color: Colors.amber, size: 30),
+              Container(
+                width: 80,
+                height: 120,
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                ),
+                alignment: Alignment.center,
+                child: const Text(
+                  "1",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+
+          // 3rd Position
+          Container(
+            width: 70,
+            height: 60,
+            decoration: const BoxDecoration(
+              color: Colors.deepOrange,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(12),
+              ),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              "3",
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+          ),
         ],
       ),
     );
   }
+}
 
-  Widget podiumBox(String text, double height, Color color) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        if (text == "1") const Icon(Icons.star, color: Colors.amber, size: 30),
-        Container(
-          width: 60,
-          height: height,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(8),
+Widget podiumItem(String rank, double height, Color color) {
+  return Column(
+    children: [
+      if (rank == "1") const Icon(Icons.star, color: Colors.amber, size: 28),
+      Container(
+        width: 65,
+        height: height,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          gradient: LinearGradient(
+            colors: [
+              color.withOpacity(0.8),
+              color.withOpacity(0.4),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.6),
+              blurRadius: 25,
+              spreadRadius: 2,
+            )
+          ],
+        ),
+        child: Text(
+          rank,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 }
 
 class LeaderTile extends StatelessWidget {
-  final Color medalColor;
-  final String medalText;
+  final String rank;
   final String name;
   final String points;
 
   const LeaderTile({
     super.key,
-    required this.medalColor,
-    required this.medalText,
+    required this.rank,
     required this.name,
     required this.points,
   });
@@ -165,53 +212,53 @@ class LeaderTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      margin: const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        boxShadow: [
           BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          )
+            color: Colors.black.withOpacity(0.4),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
       child: Row(
         children: [
           CircleAvatar(
-            radius: 20,
-            backgroundColor: medalColor,
+            radius: 22,
+            backgroundColor: Colors.cyanAccent,
             child: Text(
-              medalText,
+              rank,
               style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+                  color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 16),
           const CircleAvatar(
-            radius: 20,
+            radius: 22,
             backgroundColor: Colors.blueAccent,
             child: Icon(Icons.person, color: Colors.white),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 16),
           Expanded(
             child: Text(
               name,
               style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
           Text(
             points,
             style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+              color: Colors.cyanAccent,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
