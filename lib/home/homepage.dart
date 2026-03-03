@@ -5,6 +5,7 @@ import 'package:khel_yuva/res/colors.dart';
 import 'package:khel_yuva/bottomnavbar/upload.dart';
 import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
 import 'package:khel_yuva/sidenavbar/aboutus.dart';
+import 'package:khel_yuva/sidenavbar/diet.dart';
 import 'package:khel_yuva/sidenavbar/profile.dart';
 import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/bottomnavbar/progresspage.dart';
@@ -75,6 +76,7 @@ class _HomePageState extends State<HomePage>
       const UploadFormScreen(),
       const ProgressPage(),
       ProfilePage(),
+      DietRecommendationPage(),
     ];
   }
 
@@ -1275,6 +1277,7 @@ class _HomePageState extends State<HomePage>
           ),
           _drawerItem(Icons.home_rounded, "Home", 0),
           _drawerItem(Icons.person_outline_rounded, "Profile", 4),
+          _drawerItem(Icons.food_bank_rounded, "Diet", 5),
           const Divider(color: KY.divider),
           ListTile(
             leading: const Icon(Icons.info_outline_rounded, color: KY.accent),
