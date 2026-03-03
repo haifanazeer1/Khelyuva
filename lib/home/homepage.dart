@@ -10,35 +10,6 @@ import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/bottomnavbar/progresspage.dart';
 import 'package:khel_yuva/widgets/Login.dart';
 
-class KY {
-  static const Color bg = Color(0xFF0D0F1A);
-  static const Color surface = Color(0xFF161928);
-  static const Color card = Color(0xFF1E2236);
-  static const Color accent = Color(0xFF00E5FF);
-  static const Color green = Color(0xFF00E676);
-  static const Color orange = Color(0xFFFF6D00);
-  static const Color purple = Color(0xFF7C4DFF);
-  static const Color textPri = Color(0xFFFFFFFF);
-  static const Color textSec = Color(0xFF8892A4);
-  static const Color divider = Color(0xFF252A3D);
-
-  static const gradientAccent = LinearGradient(
-    colors: [Color(0xFF00E5FF), Color(0xFF7C4DFF)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  static const gradientFire = LinearGradient(
-    colors: [Color(0xFFFF6D00), Color(0xFFFF1744)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  static const gradientGreen = LinearGradient(
-    colors: [Color(0xFF00E676), Color(0xFF00BFA5)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-}
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
