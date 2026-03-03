@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:khel_yuva/bottomnavbar/upload.dart';
-import 'package:khel_yuva/main.dart';
 import 'package:khel_yuva/res/colors.dart';
-import 'package:khel_yuva/bottomnavbar/upload.dart';
 import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
 import 'package:khel_yuva/sidenavbar/aboutus.dart';
 import 'package:khel_yuva/sidenavbar/profile.dart';
 import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/bottomnavbar/progresspage.dart';
-import 'package:khel_yuva/widgets/Login.dart';
+import 'package:khel_yuva/widgets/login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -45,7 +43,7 @@ class _HomePageState extends State<HomePage>
       const LeaderboardScreen(),
       const UploadFormScreen(),
       const ProgressPage(),
-      ProfilePage(),
+      const ProfilePage(),
     ];
   }
 
@@ -1280,7 +1278,7 @@ class _HomePageState extends State<HomePage>
             onTap: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => SignInScreen()),
+                MaterialPageRoute(builder: (_) => const SignInScreen()),
                 (route) => false,
               );
             },
