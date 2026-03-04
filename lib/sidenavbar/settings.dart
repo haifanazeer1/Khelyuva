@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:khel_yuva/res/colors.dart';
 
 void main() => runApp(const SettingsApp());
 
 class SettingsApp extends StatelessWidget {
-  const SettingsApp({Key? key}) : super(key: key);
+  const SettingsApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class SettingsApp extends StatelessWidget {
 }
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -29,30 +30,23 @@ class _SettingsPageState extends State<SettingsPage> {
   String appearanceMode = 'dark';
 
   // ── Colors ──────────────────────────────────────────────────────────────────
-  static const _bg = Color(0xFF0F0F1A);
-  static const _surface = Color(0xFF1A1A2E);
-  static const _border = Color(0xFF2A2A4A);
-  static const _accent = Color(0xFF6C63FF);
-  static const _textPrimary = Colors.white;
-  static const _textSecondary = Color(0xFF9090B0);
-  static const _danger = Color(0xFFFF5370);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor: AppColor.setbg,
       appBar: AppBar(
-        backgroundColor: _bg,
+        backgroundColor: AppColor.setbg,
         elevation: 0,
         leading: IconButton(
-          icon:
-              const Icon(Icons.arrow_back_ios_new_rounded, color: _textPrimary),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: AppColor.settextPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           'Settings',
           style: TextStyle(
-            color: _textPrimary,
+            color: AppColor.settextPrimary,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
           ),
@@ -70,13 +64,13 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 28),
 
             // ── Account ───────────────────────────────────────────────────
-            _SectionHeader(title: 'Account'),
+            const _SectionHeader(title: 'Account'),
             const SizedBox(height: 12),
             _SettingsGroup(
               children: [
                 _SettingsTile(
                   icon: Icons.person_outline_rounded,
-                  iconColor: _accent,
+                  iconColor: AppColor.setaccent,
                   title: 'Edit Profile',
                   onTap: () => Navigator.pushNamed(context, '/profile'),
                 ),
@@ -92,7 +86,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 28),
 
             // ── Notifications ─────────────────────────────────────────────
-            _SectionHeader(title: 'Notifications'),
+            const _SectionHeader(title: 'Notifications'),
             const SizedBox(height: 12),
             _SettingsGroup(
               children: [
@@ -118,7 +112,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 28),
 
             // ── Privacy ───────────────────────────────────────────────────
-            _SectionHeader(title: 'Privacy & Security'),
+            const _SectionHeader(title: 'Privacy & Security'),
             const SizedBox(height: 12),
             _SettingsGroup(
               children: [
@@ -137,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF00BFA5).withOpacity(0.15),
+                      color: const Color(0xFF00BFA5).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: const Text(
@@ -156,7 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 28),
 
             // ── Appearance ────────────────────────────────────────────────
-            _SectionHeader(title: 'Appearance'),
+            const _SectionHeader(title: 'Appearance'),
             const SizedBox(height: 12),
             _SettingsGroup(
               children: [
@@ -171,7 +165,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 _SettingsDivider(),
                 _AppearanceTile(
                   icon: Icons.dark_mode_rounded,
-                  iconColor: _accent,
+                  iconColor: AppColor.setaccent,
                   label: 'Dark Mode',
                   value: 'dark',
                   groupValue: appearanceMode,
@@ -182,20 +176,20 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 28),
 
             // ── Support ───────────────────────────────────────────────────
-            _SectionHeader(title: 'Support'),
+            const _SectionHeader(title: 'Support'),
             const SizedBox(height: 12),
             _SettingsGroup(
               children: [
                 _SettingsTile(
                   icon: Icons.help_outline_rounded,
-                  iconColor: _textSecondary,
+                  iconColor: AppColor.settextSecondary,
                   title: 'Help & FAQ',
                   onTap: () {},
                 ),
                 _SettingsDivider(),
                 _SettingsTile(
                   icon: Icons.info_outline_rounded,
-                  iconColor: _textSecondary,
+                  iconColor: AppColor.settextSecondary,
                   title: 'About KhelYuva',
                   onTap: () {},
                 ),
@@ -218,22 +212,23 @@ class _SettingsPageState extends State<SettingsPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: _surface,
+        backgroundColor: AppColor.setsurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(color: _border),
+          side: const BorderSide(color: AppColor.setborder),
         ),
         title: const Text('Log Out?',
-            style: TextStyle(color: _textPrimary, fontWeight: FontWeight.bold)),
+            style: TextStyle(
+                color: AppColor.settextPrimary, fontWeight: FontWeight.bold)),
         content: const Text(
           'Are you sure you want to log out of your account?',
-          style: TextStyle(color: _textSecondary, height: 1.5),
+          style: TextStyle(color: AppColor.settextSecondary, height: 1.5),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child:
-                const Text('Cancel', style: TextStyle(color: _textSecondary)),
+            child: const Text('Cancel',
+                style: TextStyle(color: AppColor.settextSecondary)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -241,7 +236,7 @@ class _SettingsPageState extends State<SettingsPage> {
               // Handle logout
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: _danger,
+              backgroundColor: AppColor.setdanger,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
@@ -270,7 +265,7 @@ class _ProfileCard extends StatelessWidget {
         border: Border.all(color: _border),
         boxShadow: [
           BoxShadow(
-            color: _accent.withOpacity(0.08),
+            color: _accent.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -394,6 +389,7 @@ class _SettingsTile extends StatelessWidget {
     required this.icon,
     required this.iconColor,
     required this.title,
+    // ignore: unused_element_parameter
     this.subtitle,
     this.trailing,
     this.onTap,
@@ -488,7 +484,7 @@ class _SettingsToggle extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xFF6C63FF),
+            activeThumbColor: const Color(0xFF6C63FF),
             inactiveThumbColor: const Color(0xFF9090B0),
             inactiveTrackColor: const Color(0xFF2A2A4A),
           ),
@@ -585,10 +581,10 @@ class _LogoutButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFFFF5370).withOpacity(0.1),
+            color: const Color(0xFFFF5370).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFFFF5370).withOpacity(0.3),
+              color: const Color(0xFFFF5370).withValues(alpha: 0.3),
             ),
           ),
           child: const Row(
@@ -625,7 +621,7 @@ class _IconBadge extends StatelessWidget {
       width: 38,
       height: 38,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Icon(icon, color: color, size: 20),
