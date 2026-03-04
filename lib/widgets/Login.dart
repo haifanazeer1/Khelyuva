@@ -3,7 +3,7 @@ import 'package:khel_yuva/home/homepage.dart';
 import 'package:khel_yuva/widgets/register.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class _SignInHero extends StatelessWidget {
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF6C63FF).withOpacity(0.4),
+                  color: const Color(0xFF6C63FF).withValues(alpha: .4),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
