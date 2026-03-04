@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khel_yuva/res/colors.dart';
 import 'package:khel_yuva/sidenavbar/dietrecommendation/body_details_page.dart';
+import 'package:khel_yuva/home/homepage.dart';
 
 class DietHomePage extends StatelessWidget {
   const DietHomePage({super.key});
@@ -15,7 +16,10 @@ class DietHomePage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
             },
             icon: const Icon(
               Icons.arrow_back,
