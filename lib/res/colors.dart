@@ -21,6 +21,19 @@ class AppColor {
   static const settextPrimary = Colors.white;
   static const settextSecondary = Color(0xFF9090B0);
   static const setdanger = Color(0xFFFF5370);
+
+  //trainers
+  static const trainerBg = Color(0xFF0A0E1A);
+  static const trainerCard = Color(0xFF111827);
+  static const trainerCardDeep = Color(0xFF0F172A);
+  static const trainerCyan = Color(0xFF06B6D4);
+  static const trainerIndigo = Color(0xFF6366F1);
+  static const trainerGold = Color(0xFFFBBF24);
+  static const trainerGreen = Color(0xFF4ADE80);
+  static const trainerRed = Color(0xFFEF4444);
+  static const trainerMuted = Color(0xFF64748B);
+  static const trainerSub = Color(0xFF475569);
+  static const trainerSlate = Color(0xFF94A3B8);
 }
 
 class KY {

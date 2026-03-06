@@ -10,6 +10,8 @@ import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/widgets/login.dart';
 import 'package:khel_yuva/widgets/register.dart';
 import 'package:khel_yuva/home/dashboard.dart';
+import 'package:khel_yuva/home/exp points/xp.dart';
+import 'package:khel_yuva/home/personal trainer/ptrainer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const XPPage(),
     );
   }
 }
