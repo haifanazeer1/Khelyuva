@@ -8,6 +8,7 @@ import 'package:khel_yuva/sidenavbar/profile.dart';
 import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/bottomnavbar/progresspage.dart';
 import 'package:khel_yuva/widgets/login.dart';
+import 'package:khel_yuva/home/chatbot/chatbot.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,9 +60,20 @@ class _HomePageState extends State<HomePage>
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: _buildDrawer(), // 🔥 Drawer added
-      body: IndexedStack(
-        index: _navIndex,
-        children: _pages,
+      body: Stack(
+        children: [
+          IndexedStack(
+            index: _navIndex,
+            children: _pages,
+          ),
+
+          // Chatbot floating button
+          Positioned(
+            right: 18,
+            bottom: 110,
+            child: _buildChatBot(),
+          ),
+        ],
       ),
       bottomNavigationBar: _buildBottomNav(),
       floatingActionButton: _buildFAB(),
@@ -1214,6 +1226,39 @@ class _HomePageState extends State<HomePage>
             _navIndex = 2; // Upload screen index
           });
         },
+      ),
+    );
+  }
+
+  Widget _buildChatBot() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const ChatBotScreen(),
+          ),
+        );
+      },
+      child: Container(
+        width: 58,
+        height: 58,
+        decoration: BoxDecoration(
+          gradient: KY.gradientAccent,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: KY.accent.withValues(alpha: 0.4),
+              blurRadius: 16,
+              spreadRadius: 2,
+            )
+          ],
+        ),
+        child: const Icon(
+          Icons.smart_toy_rounded,
+          color: Colors.black,
+          size: 30,
+        ),
       ),
     );
   }
