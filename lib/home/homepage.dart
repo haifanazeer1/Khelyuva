@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khel_yuva/bottomnavbar/upload.dart';
+import 'package:khel_yuva/home/exp%20points/xp.dart';
 import 'package:khel_yuva/res/colors.dart';
 import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
 import 'package:khel_yuva/sidenavbar/aboutus.dart';
@@ -47,6 +48,7 @@ class _HomePageState extends State<HomePage>
       const ProgressPage(),
       const ProfilePage(),
       const DietHomePage(),
+      XPPage()
     ];
   }
 
@@ -1177,7 +1179,7 @@ class _HomePageState extends State<HomePage>
             _navItem(Icons.home_rounded, 'Home', 0),
             _navItem(Icons.bar_chart_rounded, 'LeaderBoard', 1),
             const SizedBox(width: 48),
-            _navItem(Icons.emoji_events_rounded, 'Ranks', 3),
+            _navItem(Icons.emoji_events_rounded, 'Ranks', 6),
             _navItem(Icons.person_rounded, 'Profile', 4),
           ],
         ),
