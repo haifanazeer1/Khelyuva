@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:khel_yuva/constants/config.dart';
 import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
 import 'package:khel_yuva/bottomnavbar/upload.dart';
 import 'package:khel_yuva/faq.dart';
@@ -13,7 +15,14 @@ import 'package:khel_yuva/home/dashboard.dart';
 import 'package:khel_yuva/home/exp points/xp.dart';
 import 'package:khel_yuva/home/personal trainer/ptrainer.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
+  );
+
   runApp(const MyApp());
 }
 

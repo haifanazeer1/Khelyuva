@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:khel_yuva/constants/config.dart';
 
 class UploadFormScreen extends StatefulWidget {
   const UploadFormScreen({super.key});
@@ -20,6 +22,8 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
 
+  Uint8List? _videoBytes; // for web
+
   // ================= PICK VIDEO =================
   Future<void> _pickVideo() async {
     try {
@@ -30,18 +34,24 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
         await _videoController?.dispose();
 
         if (kIsWeb) {
+          // Web: read as bytes
+          final bytes = await pickedVideo.readAsBytes();
+          _videoBytes = bytes;
+
           _videoController = VideoPlayerController.network(pickedVideo.path)
             ..initialize().then((_) {
               setState(() {});
             });
         } else {
+          // Mobile: use File
           File file = File(pickedVideo.path);
+          _videoFile = file;
+          _videoBytes = await file.readAsBytes();
+
           _videoController = VideoPlayerController.file(file)
             ..initialize().then((_) {
               setState(() {});
             });
-
-          _videoFile = file;
         }
       }
     } catch (e) {
@@ -67,23 +77,56 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    if (_videoBytes == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Video data not found, please re-upload')),
+      );
+      return;
+    }
 
-    await Future.delayed(const Duration(seconds: 2));
+    setState(() => _isLoading = true);
 
-    setState(() {
-      _isLoading = false;
-      _type.clear();
-      _videoController?.dispose();
-      _videoController = null;
-      _videoFile = null;
-    });
+    try {
+      final supabase = Supabase.instance.client;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Exercise uploaded successfully!')),
-    );
+      // 1. Upload video to Supabase Storage
+      final fileName = 'exercise_${DateTime.now().millisecondsSinceEpoch}.mp4';
+
+      await supabase.storage.from('videos').uploadBinary(
+            fileName,
+            _videoBytes!,
+            fileOptions: const FileOptions(contentType: 'video/mp4'),
+          );
+
+      // 2. Get the public URL
+      final videoUrl = supabase.storage.from('videos').getPublicUrl(fileName);
+
+      // 3. Save to database
+      // ✅ To this
+      await supabase.schema('upload_form').from('exercises').insert({
+        'type': _type.text.trim(),
+        'video_url': videoUrl,
+      });
+
+      // 4. Reset form
+      setState(() {
+        _isLoading = false;
+        _type.clear();
+        _videoController?.dispose();
+        _videoController = null;
+        _videoFile = null;
+        _videoBytes = null;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Exercise uploaded successfully!')),
+      );
+    } catch (e) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Upload failed: $e')),
+      );
+    }
   }
 
   @override
