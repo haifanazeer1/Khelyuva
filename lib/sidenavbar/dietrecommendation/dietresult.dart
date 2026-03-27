@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:khel_yuva/res/colors.dart';
 
 class DietResultPage extends StatelessWidget {
-  const DietResultPage({super.key});
+  final Map<String, dynamic> foods;
+
+  const DietResultPage({super.key, required this.foods});
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +14,21 @@ class DietResultPage extends StatelessWidget {
         backgroundColor: KY.surface,
         title: const Text("Your Diet Plan"),
         elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Container(
+            decoration: BoxDecoration(
+              color: KY.card,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context, foods);
+              },
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -21,12 +38,14 @@ class DietResultPage extends StatelessWidget {
             children: [
               _sectionTitle("Daily Nutrition Target"),
               _calorieCard(),
+              _sectionTitle("Your Body Stats"),
+              _bmiCard(),
               _sectionTitle("Macronutrients"),
               _macroCard(),
               _sectionTitle("Today's Meal Plan"),
-              _mealCard("Breakfast", "Oats + Banana + Milk"),
-              _mealCard("Lunch", "Brown Rice + Chicken + Salad"),
-              _mealCard("Dinner", "Grilled Fish + Vegetables"),
+              _mealCard("Breakfast", foods['meals']['breakfast']),
+              _mealCard("Lunch", foods['meals']['lunch']),
+              _mealCard("Dinner", foods['meals']['dinner']),
               const SizedBox(height: 20),
               _regenerateButton(context),
             ],
@@ -64,24 +83,55 @@ class DietResultPage extends StatelessWidget {
           gradient: KY.gradientAccent,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Daily Calories",
               style: TextStyle(
                   color: Colors.black54,
                   fontSize: 12,
                   fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              "2000 kcal",
-              style: TextStyle(
+              "${foods['target_calories']} kcal",
+              style: const TextStyle(
                   color: Colors.black,
                   fontSize: 28,
                   fontWeight: FontWeight.bold),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────
+  // BMI CARD
+  // ─────────────────────────────
+
+  Widget _bmiCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: KY.card,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: KY.divider),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "BMI: ${foods['bmi']}",
+              style: const TextStyle(color: Colors.white),
+            ),
+            Text(
+              foods['bmi_category'],
+              style: const TextStyle(color: KY.textSec),
+            )
           ],
         ),
       ),
@@ -104,10 +154,10 @@ class DietResultPage extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            _MacroItem("Protein", "120g", KY.green),
-            _MacroItem("Carbs", "250g", KY.orange),
-            _MacroItem("Fat", "70g", KY.purple),
+          children: [
+            _MacroItem("Protein", "${foods['macros']['protein']}g", KY.green),
+            _MacroItem("Carbs", "${foods['macros']['carbs']}g", KY.orange),
+            _MacroItem("Fat", "${foods['macros']['fat']}g", KY.purple),
           ],
         ),
       ),
@@ -168,7 +218,7 @@ class DietResultPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          Navigator.pop(context, foods);
         },
         child: Container(
           width: double.infinity,

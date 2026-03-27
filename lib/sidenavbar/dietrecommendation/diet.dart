@@ -4,7 +4,8 @@ import 'package:khel_yuva/sidenavbar/dietrecommendation/body_details_page.dart';
 import 'package:khel_yuva/home/homepage.dart';
 
 class DietHomePage extends StatelessWidget {
-  const DietHomePage({super.key});
+  final Map<String, dynamic>? foods;
+  const DietHomePage({super.key, this.foods});
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +61,22 @@ class DietHomePage extends StatelessWidget {
   // NUTRITION SUMMARY
   // ─────────────────────────────
   Widget _nutritionSummary() {
+    // 🔥 If no data yet
+    if (foods == null) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          "No nutrition data yet. Generate a plan.",
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    }
+
+    final calories = foods!['target_calories'];
+    final protein = foods!['macros']['protein'];
+    final carbs = foods!['macros']['carbs'];
+    final fat = foods!['macros']['fat'];
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -71,30 +88,37 @@ class DietHomePage extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Calories",
-                    style: TextStyle(color: KY.textSec, fontSize: 12)),
-                Text("1200 / 2000 kcal",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const LinearProgressIndicator(
-              value: 0.6,
-              backgroundColor: KY.divider,
-              valueColor: AlwaysStoppedAnimation(KY.accent),
-              minHeight: 8,
-            ),
-            const SizedBox(height: 18),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _macro("Protein", "72g", KY.green),
-                _macro("Carbs", "150g", KY.orange),
-                _macro("Fat", "45g", KY.purple),
+                const Text("Calories",
+                    style: TextStyle(color: KY.textSec, fontSize: 12)),
+                Text(
+                  "$calories kcal",
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            // 🔥 Progress bar (dummy progress for now)
+            LinearProgressIndicator(
+              value: 0.7, // you can make this dynamic later
+              backgroundColor: KY.divider,
+              valueColor: const AlwaysStoppedAnimation(KY.accent),
+              minHeight: 8,
+            ),
+
+            const SizedBox(height: 18),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _macro("Protein", "${protein}g", KY.green),
+                _macro("Carbs", "${carbs}g", KY.orange),
+                _macro("Fat", "${fat}g", KY.purple),
               ],
             )
           ],
@@ -119,10 +143,21 @@ class DietHomePage extends StatelessWidget {
   // MEAL PLAN
   // ─────────────────────────────
   Widget _mealPlan() {
+    // 🔥 If no data yet → show placeholder
+    if (foods == null || foods!['meals'] == null) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          "No meal plan generated yet. Click Generate.",
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    }
+
     final meals = [
-      {"name": "Breakfast", "food": "Oats + Banana + Milk"},
-      {"name": "Lunch", "food": "Brown Rice + Chicken + Salad"},
-      {"name": "Dinner", "food": "Grilled Fish + Vegetables"},
+      {"name": "Breakfast", "food": foods!['meals']['breakfast']},
+      {"name": "Lunch", "food": foods!['meals']['lunch']},
+      {"name": "Dinner", "food": foods!['meals']['dinner']},
     ];
 
     return Column(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:khel_yuva/res/colors.dart';
 import 'package:khel_yuva/sidenavbar/dietrecommendation/dietresult.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:khel_yuva/services/diet_api_service.dart';
+import 'package:khel_yuva/sidenavbar/dietrecommendation/diet.dart';
 
 class BodyDetailsPage extends StatefulWidget {
   const BodyDetailsPage({super.key});
@@ -259,23 +261,13 @@ class _BodyDetailsPageState extends State<BodyDetailsPage> {
 
       // Get the currently logged-in user's ID
       // This is required because RLS policies only allow users to insert their own data
-      final userId = supabase.auth.currentUser?.id;
-
-      if (userId == null) {
-        // User is not logged in — stop and show error
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User not logged in')),
-        );
-        setState(() => _isLoading = false);
-        return;
-      }
 
       // Insert data into the 'physical_health' table
       // inside the 'physical_health' schema in Supabase
       // Column names must exactly match what's in Supabase:
       //   age, height_cm, weight_kg, fitness_goal, activity_level, user_id
       await supabase.schema('physical_health').from('physical_health').insert({
-        'user_id': userId, // links row to logged-in user
+        // links row to logged-in user
         'age': int.parse(ageController.text.trim()), // stored as integer
         'height_cm':
             double.parse(heightController.text.trim()), // stored as numeric
@@ -291,10 +283,27 @@ class _BodyDetailsPageState extends State<BodyDetailsPage> {
       if (mounted) {
         setState(() => _isLoading = false);
         // Go to the diet result page after successful save
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const DietResultPage()),
+        final foods = await DietApiService.getDiet(
+          age: int.parse(ageController.text.trim()),
+          weight: double.parse(weightController.text.trim()),
+          height: double.parse(heightController.text.trim()),
+          fitnessGoal: goal,
+          activityLevel: activity,
         );
+
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => DietResultPage(foods: foods)),
+        );
+
+        if (result != null && context.mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => DietHomePage(foods: result),
+            ),
+          );
+        }
       }
     } catch (e) {
       // Show the error message if anything goes wrong
