@@ -17,15 +17,19 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
   int reps = 0;
   String feedback = "Starting...";
 
-  final String baseUrl = "http://192.168.1.5:5000"; // CHANGE IF NEEDED
+  final String baseUrl = "http://192.168.1.5:5000";
 
   Timer? timer;
+  late String videoUrl;
 
   @override
   void initState() {
     super.initState();
 
-    // 🔄 Fetch data every 500ms
+    // ✅ FIX 1: Set video URL ONCE
+    videoUrl = "$baseUrl/video_feed?key=${widget.exercise}";
+
+    // ✅ FIX 2: Prevent multiple timers
     timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
       fetchStatus();
     });
@@ -40,10 +44,12 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        setState(() {
-          reps = data["reps"] ?? 0;
-          feedback = data["feedback"] ?? "Starting...";
-        });
+        if (mounted) {
+          setState(() {
+            reps = data["reps"] ?? 0;
+            feedback = data["feedback"] ?? "Starting...";
+          });
+        }
       }
     } catch (e) {
       print("Error fetching status: $e");
@@ -52,7 +58,7 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
 
   @override
   void dispose() {
-    timer?.cancel(); // 🛑 stop timer when screen closes
+    timer?.cancel();
     super.dispose();
   }
 
@@ -66,7 +72,7 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
       ),
       body: Column(
         children: [
-          // 🎥 VIDEO STREAM
+          // 🎥 VIDEO STREAM (FIXED)
           Expanded(
             child: Container(
               margin: EdgeInsets.all(12),
@@ -83,14 +89,24 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.network(
-                  "$baseUrl/video_feed?key=${widget.exercise}",
+                  videoUrl,
                   fit: BoxFit.cover,
+                  gaplessPlayback: true, // ✅ important
+                  headers: {"Connection": "keep-alive"}, // ✅ helps MJPEG
+                  errorBuilder: (context, error, stackTrace) {
+                    return Center(
+                      child: Text(
+                        "⚠️ Unable to load video",
+                        style: TextStyle(color: Colors.redAccent),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
           ),
 
-          // 📊 LIVE DATA (REPS + FEEDBACK)
+          // 📊 LIVE DATA
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Column(
@@ -130,7 +146,7 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
               onPressed: () {
                 timer?.cancel();
 
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) => ResultScreen(exercise: widget.exercise),

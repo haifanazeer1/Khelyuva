@@ -19,20 +19,12 @@ current_data = {
     "feedback": "Starting..."
 }
 
-check = False
-start = 0
-stop = 0
-err_top = []
-err_bottom = []
-l1 = []
-l2 = []
-
 @app.route("/")
 def index():
     return "Backend Running ✅"
 
 
-# 🔥 GENERIC CAMERA STREAM
+# 🔥 GENERIC CAMERA STREAM (UPDATED)
 def generate_frames(process_frame):
     cap = cv2.VideoCapture(0)
 
@@ -50,6 +42,9 @@ def generate_frames(process_frame):
 
         # Apply exercise logic
         frame = process_frame(frame)
+
+        # 🔥 IMPORTANT FIX → reduces overload
+        time.sleep(0.03)
 
         ret, buffer = cv2.imencode('.jpg', frame)
         frame_bytes = buffer.tobytes()
@@ -75,7 +70,6 @@ def pushup_logic():
         if len(lmList) != 0:
             angle = detector.findAngle(frame, 12, 14, 16)
 
-            # Count reps
             if angle <= 70 and direction == 0:
                 count += 0.5
                 direction = 1
@@ -84,7 +78,6 @@ def pushup_logic():
                 count += 0.5
                 direction = 0
 
-            # 🔥 UPDATE STATUS
             current_data["reps"] = int(count)
 
             if angle < 70:
@@ -94,7 +87,6 @@ def pushup_logic():
             else:
                 current_data["feedback"] = "Keep going"
 
-            # Draw on frame
             cv2.putText(frame, f"Reps: {int(count)}", (50, 100),
                         cv2.FONT_HERSHEY_PLAIN, 3, (255, 255, 255), 3)
 
@@ -126,7 +118,6 @@ def bicep_logic():
                 count += 0.5
                 direction = 0
 
-            # 🔥 UPDATE STATUS
             current_data["reps"] = int(count)
 
             if angle < 40:
@@ -157,7 +148,6 @@ def plank_logic():
 
             status = "Good Form" if 140 <= angle <= 170 else "Fix Posture"
 
-            # 🔥 UPDATE STATUS
             current_data["reps"] = 0
             current_data["feedback"] = status
 
@@ -190,13 +180,13 @@ def video_feed():
     return "Invalid Exercise ❌"
 
 
-# ✅ REAL-TIME STATUS FOR FLUTTER
+# ✅ STATUS
 @app.route("/status")
 def status():
     return current_data
 
 
-# ✅ RESULTS (GRAPH)
+# ✅ RESULTS
 @app.route("/results")
 def results():
     img = BytesIO()
@@ -210,4 +200,4 @@ def results():
 
 # ✅ RUN SERVER
 if __name__ == "__main__":
-    app.run(debug=True, threaded=True)
+    app.run(host="0.0.0.0", port=5000, debug=True, threaded=True)

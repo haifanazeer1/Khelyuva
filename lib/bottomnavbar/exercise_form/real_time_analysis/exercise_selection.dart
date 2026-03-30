@@ -29,7 +29,7 @@ class ExerciseSelectionScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) =>

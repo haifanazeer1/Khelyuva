@@ -36,7 +36,7 @@ class ModeSelectionScreen extends StatelessWidget {
               subtitle: "Use camera for live feedback",
               icon: Icons.videocam,
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) => ExerciseSelectionScreen(),
