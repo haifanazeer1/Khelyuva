@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/exercise_selection.dart';
+import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/live_workout.dart';
+import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/result_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:khel_yuva/constants/config.dart';
 import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
-import 'package:khel_yuva/bottomnavbar/upload.dart';
+import 'package:khel_yuva/bottomnavbar/exercise_form/upload.dart';
 import 'package:khel_yuva/faq.dart';
 import 'package:khel_yuva/home/homepage.dart';
 import 'package:khel_yuva/sidenavbar/aboutus.dart';
@@ -38,7 +41,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }

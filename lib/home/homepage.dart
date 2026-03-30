@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:khel_yuva/bottomnavbar/upload.dart';
+import 'package:khel_yuva/bottomnavbar/exercise_form/upload.dart';
 import 'package:khel_yuva/home/exp%20points/xp.dart';
 import 'package:khel_yuva/res/colors.dart';
 import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
@@ -10,6 +10,7 @@ import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/bottomnavbar/progresspage.dart';
 import 'package:khel_yuva/widgets/login.dart';
 import 'package:khel_yuva/home/chatbot/chatbot.dart';
+import 'package:khel_yuva/bottomnavbar/exercise_form/model_selection_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage>
     _pages = [
       _buildHomeContent(), // Your full UI
       const LeaderboardScreen(),
-      const UploadFormScreen(),
+      ModeSelectionScreen(),
       const ProgressPage(),
       const ProfilePage(),
       const DietHomePage(),
