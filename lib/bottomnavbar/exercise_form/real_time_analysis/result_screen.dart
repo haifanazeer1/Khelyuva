@@ -16,7 +16,7 @@ class _ResultScreenState extends State<ResultScreen> {
   bool isLoading = true;
   String errorMessage = "";
 
-  final String baseUrl = "http://192.168.1.5:5000"; // CHANGE IF NEEDED
+  final String baseUrl = "http://192.168.1.5:5000";
 
   @override
   void initState() {
@@ -27,7 +27,9 @@ class _ResultScreenState extends State<ResultScreen> {
   Future<void> fetchResults() async {
     try {
       final response = await http.get(
-        Uri.parse("$baseUrl/results?key=${widget.exercise}"),
+        Uri.parse(
+          "$baseUrl/results?key=${Uri.encodeComponent(widget.exercise)}",
+        ),
       );
 
       if (response.statusCode == 200 && response.body.isNotEmpty) {
@@ -69,8 +71,6 @@ class _ResultScreenState extends State<ResultScreen> {
                     child: Column(
                       children: [
                         SizedBox(height: 20),
-
-                        // 🔥 TITLE
                         Text(
                           widget.exercise,
                           style: TextStyle(
@@ -79,10 +79,7 @@ class _ResultScreenState extends State<ResultScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                         SizedBox(height: 20),
-
-                        // 📊 RESULT GRAPH CARD
                         Container(
                           margin: EdgeInsets.all(16),
                           padding: EdgeInsets.all(12),
@@ -110,10 +107,7 @@ class _ResultScreenState extends State<ResultScreen> {
                             ),
                           ),
                         ),
-
                         SizedBox(height: 20),
-
-                        // 🔙 BACK BUTTON
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.cyanAccent,
@@ -128,7 +122,6 @@ class _ResultScreenState extends State<ResultScreen> {
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
-
                         SizedBox(height: 20),
                       ],
                     ),

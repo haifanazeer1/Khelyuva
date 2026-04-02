@@ -19,18 +19,35 @@ current_data = {
     "feedback": "Starting..."
 }
 
+check = False
+start = 0
+stop = 0
+err_top = []
+err_bottom = []
+l1 = []
+l2 = []
+
 @app.route("/")
 def index():
     return "Backend Running ✅"
 
 
-# 🔥 GENERIC CAMERA STREAM (UPDATED)
+# 🔥 GENERIC CAMERA STREAM
 def generate_frames(process_frame):
     cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
         print("❌ Camera not accessible")
-        return
+        while True:
+            blank = np.zeros((600, 800, 3), dtype=np.uint8)
+            cv2.putText(blank, "Camera not accessible", (100, 300),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+            ret, buffer = cv2.imencode('.jpg', blank)
+            frame_bytes = buffer.tobytes()
+
+            yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
     while True:
         success, frame = cap.read()
@@ -42,9 +59,6 @@ def generate_frames(process_frame):
 
         # Apply exercise logic
         frame = process_frame(frame)
-
-        # 🔥 IMPORTANT FIX → reduces overload
-        time.sleep(0.03)
 
         ret, buffer = cv2.imencode('.jpg', frame)
         frame_bytes = buffer.tobytes()
@@ -70,6 +84,7 @@ def pushup_logic():
         if len(lmList) != 0:
             angle = detector.findAngle(frame, 12, 14, 16)
 
+            # Count reps
             if angle <= 70 and direction == 0:
                 count += 0.5
                 direction = 1
@@ -78,6 +93,7 @@ def pushup_logic():
                 count += 0.5
                 direction = 0
 
+            # 🔥 UPDATE STATUS
             current_data["reps"] = int(count)
 
             if angle < 70:
@@ -87,6 +103,7 @@ def pushup_logic():
             else:
                 current_data["feedback"] = "Keep going"
 
+            # Draw on frame
             cv2.putText(frame, f"Reps: {int(count)}", (50, 100),
                         cv2.FONT_HERSHEY_PLAIN, 3, (255, 255, 255), 3)
 
@@ -118,6 +135,7 @@ def bicep_logic():
                 count += 0.5
                 direction = 0
 
+            # 🔥 UPDATE STATUS
             current_data["reps"] = int(count)
 
             if angle < 40:
@@ -148,6 +166,7 @@ def plank_logic():
 
             status = "Good Form" if 140 <= angle <= 170 else "Fix Posture"
 
+            # 🔥 UPDATE STATUS
             current_data["reps"] = 0
             current_data["feedback"] = status
 
@@ -180,13 +199,13 @@ def video_feed():
     return "Invalid Exercise ❌"
 
 
-# ✅ STATUS
+# ✅ REAL-TIME STATUS FOR FLUTTER
 @app.route("/status")
 def status():
     return current_data
 
 
-# ✅ RESULTS
+# ✅ RESULTS (GRAPH)
 @app.route("/results")
 def results():
     img = BytesIO()

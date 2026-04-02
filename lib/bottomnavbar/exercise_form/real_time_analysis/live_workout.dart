@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/result_screen.dart';
 
 class LiveWorkoutScreen extends StatefulWidget {
@@ -17,20 +18,26 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
   int reps = 0;
   String feedback = "Starting...";
 
-  final String baseUrl = "http://192.168.1.5:5000";
+  final String baseUrl = "http://192.168.0.101:5000";
 
   Timer? timer;
-  late String videoUrl;
+  late final WebViewController controller;
 
   @override
   void initState() {
     super.initState();
 
-    // ✅ FIX 1: Set video URL ONCE
-    videoUrl = "$baseUrl/video_feed?key=${widget.exercise}";
+    final videoUrl =
+        "$baseUrl/video_feed?key=${Uri.encodeComponent(widget.exercise)}";
+    print("VIDEO URL: $videoUrl");
+    // 🔥 WebView setup
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.black)
+      ..loadRequest(Uri.parse(videoUrl));
 
-    // ✅ FIX 2: Prevent multiple timers
-    timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+    // 🔄 Fetch status every 1 sec
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
       fetchStatus();
     });
   }
@@ -44,15 +51,23 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        if (mounted) {
-          setState(() {
-            reps = data["reps"] ?? 0;
-            feedback = data["feedback"] ?? "Starting...";
-          });
-        }
+        setState(() {
+          reps = data["reps"] ?? 0;
+          feedback = data["feedback"] ?? "Starting...";
+        });
       }
     } catch (e) {
       print("Error fetching status: $e");
+    }
+  }
+
+  Color getFeedbackColor(String feedback) {
+    if (feedback.toLowerCase().contains("good")) {
+      return Colors.green;
+    } else if (feedback.toLowerCase().contains("keep")) {
+      return Colors.orange;
+    } else {
+      return Colors.redAccent;
     }
   }
 
@@ -78,35 +93,15 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
               margin: EdgeInsets.all(12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.cyanAccent.withOpacity(0.4),
-                    blurRadius: 20,
-                    spreadRadius: 1,
-                  )
-                ],
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  videoUrl,
-                  fit: BoxFit.cover,
-                  gaplessPlayback: true, // ✅ important
-                  headers: {"Connection": "keep-alive"}, // ✅ helps MJPEG
-                  errorBuilder: (context, error, stackTrace) {
-                    return Center(
-                      child: Text(
-                        "⚠️ Unable to load video",
-                        style: TextStyle(color: Colors.redAccent),
-                      ),
-                    );
-                  },
-                ),
+                child: WebViewWidget(controller: controller),
               ),
             ),
           ),
 
-          // 📊 LIVE DATA
+          // 📊 DATA
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Column(
@@ -123,9 +118,7 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
                 Text(
                   feedback,
                   style: TextStyle(
-                    color: feedback == "Good form"
-                        ? Colors.green
-                        : Colors.redAccent,
+                    color: getFeedbackColor(feedback),
                     fontSize: 18,
                   ),
                 ),
@@ -146,7 +139,7 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
               onPressed: () {
                 timer?.cancel();
 
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => ResultScreen(exercise: widget.exercise),
