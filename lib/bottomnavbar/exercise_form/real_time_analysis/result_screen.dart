@@ -16,7 +16,8 @@ class _ResultScreenState extends State<ResultScreen> {
   bool isLoading = true;
   String errorMessage = "";
 
-  final String baseUrl = "http://192.168.1.5:5000";
+  // ✅ FIXED BASE URL
+  final String baseUrl = "http://192.168.0.101:5000";
 
   @override
   void initState() {
@@ -27,23 +28,30 @@ class _ResultScreenState extends State<ResultScreen> {
   Future<void> fetchResults() async {
     try {
       final response = await http.get(
-        Uri.parse(
-          "$baseUrl/results?key=${Uri.encodeComponent(widget.exercise)}",
-        ),
+        Uri.parse("$baseUrl/results"),
       );
 
+      print("STATUS: ${response.statusCode}");
+      print("BODY LENGTH: ${response.body.length}");
+
       if (response.statusCode == 200 && response.body.isNotEmpty) {
+        if (!mounted) return; // 🔥 IMPORTANT FIX
+
         setState(() {
           imageBase64 = response.body;
           isLoading = false;
         });
       } else {
+        if (!mounted) return;
+
         setState(() {
           errorMessage = "No data received";
           isLoading = false;
         });
       }
     } catch (e) {
+      if (!mounted) return;
+
       setState(() {
         errorMessage = "Error loading results";
         isLoading = false;
@@ -71,6 +79,8 @@ class _ResultScreenState extends State<ResultScreen> {
                     child: Column(
                       children: [
                         SizedBox(height: 20),
+
+                        // 🔥 TITLE
                         Text(
                           widget.exercise,
                           style: TextStyle(
@@ -79,7 +89,10 @@ class _ResultScreenState extends State<ResultScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+
                         SizedBox(height: 20),
+
+                        // 📊 GRAPH
                         Container(
                           margin: EdgeInsets.all(16),
                           padding: EdgeInsets.all(12),
@@ -101,13 +114,21 @@ class _ResultScreenState extends State<ResultScreen> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.memory(
-                              base64Decode(imageBase64!),
-                              fit: BoxFit.cover,
-                            ),
+                            child: imageBase64 != null
+                                ? Image.memory(
+                                    base64Decode(imageBase64!),
+                                    fit: BoxFit.contain, // 🔥 better fit
+                                  )
+                                : Text(
+                                    "No image",
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
                           ),
                         ),
+
                         SizedBox(height: 20),
+
+                        // 🔙 BACK BUTTON
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.cyanAccent,
@@ -122,6 +143,7 @@ class _ResultScreenState extends State<ResultScreen> {
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
+
                         SizedBox(height: 20),
                       ],
                     ),

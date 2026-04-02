@@ -2,7 +2,6 @@ from flask import Flask, Response, request
 from flask_cors import CORS
 import cv2
 import PoseModule as pm
-import time
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -18,14 +17,6 @@ current_data = {
     "reps": 0,
     "feedback": "Starting..."
 }
-
-check = False
-start = 0
-stop = 0
-err_top = []
-err_bottom = []
-l1 = []
-l2 = []
 
 @app.route("/")
 def index():
@@ -47,17 +38,14 @@ def generate_frames(process_frame):
             frame_bytes = buffer.tobytes()
 
             yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
     while True:
         success, frame = cap.read()
         if not success:
-            print("❌ Failed to read frame")
             break
 
         frame = cv2.resize(frame, (800, 600))
-
-        # Apply exercise logic
         frame = process_frame(frame)
 
         ret, buffer = cv2.imencode('.jpg', frame)
@@ -84,7 +72,6 @@ def pushup_logic():
         if len(lmList) != 0:
             angle = detector.findAngle(frame, 12, 14, 16)
 
-            # Count reps
             if angle <= 70 and direction == 0:
                 count += 0.5
                 direction = 1
@@ -93,7 +80,6 @@ def pushup_logic():
                 count += 0.5
                 direction = 0
 
-            # 🔥 UPDATE STATUS
             current_data["reps"] = int(count)
 
             if angle < 70:
@@ -103,7 +89,6 @@ def pushup_logic():
             else:
                 current_data["feedback"] = "Keep going"
 
-            # Draw on frame
             cv2.putText(frame, f"Reps: {int(count)}", (50, 100),
                         cv2.FONT_HERSHEY_PLAIN, 3, (255, 255, 255), 3)
 
@@ -135,7 +120,6 @@ def bicep_logic():
                 count += 0.5
                 direction = 0
 
-            # 🔥 UPDATE STATUS
             current_data["reps"] = int(count)
 
             if angle < 40:
@@ -166,7 +150,6 @@ def plank_logic():
 
             status = "Good Form" if 140 <= angle <= 170 else "Fix Posture"
 
-            # 🔥 UPDATE STATUS
             current_data["reps"] = 0
             current_data["feedback"] = status
 
@@ -179,9 +162,9 @@ def plank_logic():
     return process
 
 
-# ✅ VIDEO ROUTE
-@app.route("/video_feed")
-def video_feed():
+# 🔥 NEW: STREAM ROUTE (RAW VIDEO)
+@app.route("/stream")
+def stream():
     key = request.args.get("key")
 
     if key == "Pushups":
@@ -199,24 +182,59 @@ def video_feed():
     return "Invalid Exercise ❌"
 
 
-# ✅ REAL-TIME STATUS FOR FLUTTER
+# 🔥 UPDATED: VIDEO FEED (HTML WRAPPER)
+@app.route("/video_feed")
+def video_feed():
+    key = request.args.get("key")
+
+    return Response(f"""
+    <html>
+    <head>
+    <style>
+    body {{
+        margin: 0;
+        background: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }}
+    img {{
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* 🔥 FIX */
+    }}
+    </style>
+    </head>
+    <body>
+        <img src="/stream?key={key}">
+    </body>
+    </html>
+    """, mimetype='text/html')
+
+
+# ✅ STATUS
 @app.route("/status")
 def status():
     return current_data
 
 
-# ✅ RESULTS (GRAPH)
+# ✅ RESULTS
 @app.route("/results")
 def results():
-    img = BytesIO()
-    plt.plot([1, 2, 3], [3, 2, 5])
-    plt.title("Workout Result")
-    plt.savefig(img, format='png')
-    plt.close()
-    img.seek(0)
-    return base64.b64encode(img.getvalue()).decode('utf8')
-
+    try:
+        img = BytesIO()
+        plt.figure()
+        plt.plot([1, 2, 3], [3, 2, 5])
+        plt.title("Workout Result")
+        plt.savefig(img, format='png')
+        plt.close()
+        img.seek(0)
+        return base64.b64encode(img.getvalue()).decode('utf8')
+    except Exception as e:
+        print("Error:", e)
+        return "error"
 
 # ✅ RUN SERVER
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True, threaded=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
