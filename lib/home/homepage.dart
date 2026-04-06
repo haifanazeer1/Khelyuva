@@ -11,6 +11,7 @@ import 'package:khel_yuva/bottomnavbar/progresspage.dart';
 import 'package:khel_yuva/widgets/login.dart';
 import 'package:khel_yuva/home/chatbot/chatbot.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/model_selection_screen.dart';
+import 'package:khel_yuva/home/personal trainer/ptrainer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -94,6 +95,7 @@ class _HomePageState extends State<HomePage>
             _buildHeader(),
             _buildHeroBanner(),
             _buildQuickStats(),
+            _buildPersonalTrainerCard(),
             _buildSectionTitle("Today's Workout Plan"),
             _buildWorkoutPlan(),
             _buildSectionTitle("Choose a Sport to Play"),
@@ -456,6 +458,66 @@ class _HomePageState extends State<HomePage>
             ),
           );
         }),
+      ),
+    );
+  }
+
+  Widget _buildPersonalTrainerCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => NearbyTrainersScreen(),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            gradient: KY.gradientAccent,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: KY.accent.withValues(alpha: 0.4),
+                blurRadius: 16,
+              )
+            ],
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.fitness_center, color: Colors.black, size: 32),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Hire a Personal Trainer",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "Get expert guidance near you",
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios,
+                  color: Colors.black, size: 16),
+            ],
+          ),
+        ),
       ),
     );
   }
