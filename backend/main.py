@@ -1,8 +1,16 @@
-from fastapi import FastAPI
+'''from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from google import genai
-from google.genai import types
+import cv2
+import numpy as np
+import tempfile
+
+import sys
+import os
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(BASE_DIR)
+from diet_service.model import recommend_diet
+from upload_video_analysis.video_analysis import analyze_video
 
 app = FastAPI()
 
@@ -13,55 +21,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-client = genai.Client(
-    api_key="AIzaSyBZnzqcrhMu0ZL3oS9v90zgceIRys_hzoc")
+# ---------------- 🥗 DIET ----------------
+@app.post("/api/diet")
+def diet(data: dict):
+    return recommend_diet(
+        data["age"],
+        data["weight"],
+        data["height"],
+        data["fitness_goal"],
+        data["activity_level"]
+    )
 
-SYSTEM_PROMPT = """You are KhelYuva AI, a friendly and knowledgeable fitness assistant. 
-You specialize in:
-- Workout plans and exercise guidance
-- Nutrition and diet advice
-- Weight loss and muscle gain tips
-- Sports performance improvement
-- Injury prevention and recovery
-- Motivation and fitness goals
+# ---------------- 🎥 VIDEO ----------------
+@app.post("/api/video")
+async def video(file: UploadFile = File(...)):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp:
+        temp.write(await file.read())
+        path = temp.name
 
-Keep responses concise, practical, and encouraging. 
-If asked about anything unrelated to fitness, health, or sports, politely redirect the conversation back to fitness topics.
-Always remind users to consult a doctor before starting any new exercise program if they have health conditions."""
+    cap = cv2.VideoCapture(path)
 
+    angles = []
 
-class ChatRequest(BaseModel):
-    message: str
-    conversation_history: list = []
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
 
+        # ⚡ SIMPLE LOGIC (replace later with your model)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        angles.append(np.mean(gray))  # placeholder
 
-@app.post("/chat")
-def chat(req: ChatRequest):
-    try:
-        # Build conversation history for context
-        contents = []
-        for msg in req.conversation_history:
-            role = "user" if msg.get("role") == "user" else "model"
-            contents.append(types.Content(
-                role=role,
-                parts=[types.Part(text=msg.get("content", ""))]
-            ))
+    cap.release()
 
-        # Add current message
-        contents.append(types.Content(
-            role="user",
-            parts=[types.Part(text=req.message)]
-        ))
+    if not angles:
+        return {"result": "No frames processed"}
 
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=contents,
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                max_output_tokens=500,
-                temperature=0.7,
-            )
-        )
-        return {"reply": response.text}
-    except Exception as e:
-        return {"reply": str(e)}
+    return {
+        "frames": len(angles),
+        "analysis": "Video processed successfully"
+    }
+
+# ---------------- HEALTH ----------------
+@app.get("/")
+def home():
+    return {"message": "Diet + Video API running 🚀"} '''
