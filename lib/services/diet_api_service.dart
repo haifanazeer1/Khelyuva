@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class DietApiService {
-  static const String baseUrl = "https://khelyuva-1.onrender.com/recommend";
+  static const String baseUrl = "https://khelyuva-1.onrender.com";
 
   static Future<Map<String, dynamic>> getDiet({
     required int age,
