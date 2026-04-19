@@ -16,7 +16,7 @@ import 'package:khel_yuva/widgets/login.dart';
 import 'package:khel_yuva/widgets/register.dart';
 import 'package:khel_yuva/home/dashboard.dart';
 import 'package:khel_yuva/home/exp points/xp.dart';
-import 'package:khel_yuva/home/personal trainer/ptrainer.dart';
+import 'package:khel_yuva/home/personal_trainer/ptrainer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

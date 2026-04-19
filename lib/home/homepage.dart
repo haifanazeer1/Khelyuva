@@ -11,7 +11,7 @@ import 'package:khel_yuva/bottomnavbar/progresspage.dart';
 import 'package:khel_yuva/widgets/login.dart';
 import 'package:khel_yuva/home/chatbot/chatbot.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/model_selection_screen.dart';
-import 'package:khel_yuva/home/personal trainer/ptrainer.dart';
+import 'package:khel_yuva/home/personal_trainer/ptrainer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
