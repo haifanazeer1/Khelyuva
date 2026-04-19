@@ -14,7 +14,7 @@ app.add_middleware(
 )
 
 client = genai.Client(
-    api_key="AIzaSyBZnzqcrhMu0ZL3oS9v90zgceIRys_hzoc")
+    api_key="AIzaSyBjNeaIDWTALLcAWbZYdGhxVFzPA_Oq8-8")
 
 SYSTEM_PROMPT = """You are KhelYuva AI, a friendly and knowledgeable fitness assistant. 
 You specialize in:
@@ -54,7 +54,7 @@ def chat(req: ChatRequest):
         ))
 
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-1.5-flash",
             contents=contents,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
