@@ -27,7 +27,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
 
   // ⚠️ Change this to your PC's local IP if running on a physical device
   // Use 10.0.2.2 for Android emulator, or your PC's IP like 192.168.x.x for real device
-  static const String _backendUrl = 'http://localhost:8001';
+  static const String _backendUrl = 'https://khelyuva-video.onrender.com';
 
   // ================= PICK VIDEO =================
   Future<void> _pickVideo() async {
