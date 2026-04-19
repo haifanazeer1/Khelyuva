@@ -143,7 +143,7 @@ async def analyze_video(file: UploadFile = File(...)):
     base_options = mp_python.BaseOptions(model_asset_path=MODEL_PATH)
     options = PoseLandmarkerOptions(
         base_options=base_options,
-        running_mode=RunningMode.IMAGE,
+        running_mode=RunningMode.VIDEO,
         num_poses=1,
         min_pose_detection_confidence=0.5,
         min_pose_presence_confidence=0.5,
@@ -162,7 +162,9 @@ async def analyze_video(file: UploadFile = File(...)):
 
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
-            result = landmarker.detect(mp_image)
+            timestamp_ms = int(cap.get(cv2.CAP_PROP_POS_MSEC))
+
+            result = landmarker.detect_for_video(mp_image, timestamp_ms)
 
             if not result.pose_landmarks:
                 continue

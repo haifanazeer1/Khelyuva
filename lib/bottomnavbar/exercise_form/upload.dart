@@ -83,7 +83,6 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
           'file',
           _videoBytes!,
           filename: _videoFileName ?? 'exercise.mp4',
-          contentType: MediaType('video', 'mp4'),
         ),
       );
 
