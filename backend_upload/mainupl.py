@@ -1,4 +1,8 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
+app = FastAPI(title="Fitness Video Analyzer API")
+@app.get("/")
+def home():
+    return {"message": "API is running"}
 from fastapi.middleware.cors import CORSMiddleware
 import cv2
 import numpy as np
@@ -11,10 +15,8 @@ from mediapipe.tasks import python as mp_python
 from mediapipe.tasks.python import vision as mp_vision
 from mediapipe.tasks.python.vision import PoseLandmarkerOptions, RunningMode
 
-app = FastAPI(title="Fitness Video Analyzer API")
-@app.get("/")
-def home():
-    return {"message": "API is running"}
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
