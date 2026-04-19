@@ -161,10 +161,13 @@ async def analyze_video(file: UploadFile = File(...)):
                 continue
 
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
+            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(rgb))
             timestamp_ms = int(cap.get(cv2.CAP_PROP_POS_MSEC))
-
-            result = landmarker.detect_for_video(mp_image, timestamp_ms)
+            try:
+                result = landmarker.detect_for_video(mp_image, timestamp_ms)
+            except Exception as e:
+                print("DETECTION ERROR:", e)
+                continue
 
             if not result.pose_landmarks:
                 continue
