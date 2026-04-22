@@ -9,7 +9,7 @@ import 'package:khel_yuva/sidenavbar/profile.dart';
 import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/bottomnavbar/progresspage.dart';
 import 'package:khel_yuva/widgets/login.dart';
-import 'package:khel_yuva/home/chatbot/chatbot.dart';
+import 'package:khel_yuva/home/chatbotbk/chatbotscreen.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/model_selection_screen.dart';
 import 'package:khel_yuva/home/personal_trainer/ptrainer.dart';
 

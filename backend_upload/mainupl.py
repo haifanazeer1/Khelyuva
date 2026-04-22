@@ -1,9 +1,10 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
-app = FastAPI(title="Fitness Video Analyzer API")
-@app.get("/")
+from fastapi import APIRouter, File, UploadFile, HTTPException
+#app = FastAPI(title="Fitness Video Analyzer API")
+router=APIRouter()
+@router.get("/")
 def home():
     return {"message": "API is running"}
-from fastapi.middleware.cors import CORSMiddleware
+#from fastapi.middleware.cors import CORSMiddleware
 import cv2
 import numpy as np
 import tempfile
@@ -17,13 +18,13 @@ from mediapipe.tasks.python.vision import PoseLandmarkerOptions, RunningMode
 
 
 
-app.add_middleware(
+'''app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
+)'''
 
 # ── Download pose model if not present ──────────────
 MODEL_PATH = "pose_landmarker_full.task"
@@ -107,12 +108,12 @@ LEFT_KNEE = 25
 LEFT_ANKLE = 27
 
 
-@app.get("/")
+@router.get("/")
 def root():
     return {"status": "Fitness Analyzer API is running"}
 
 
-@app.post("/analyze-video")
+@router.post("/analyze-video")
 async def analyze_video(file: UploadFile = File(...)):
 
     allowed_types = ["video/mp4", "video/quicktime",

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/exercise_selection.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/live_workout.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/result_screen.dart';
+import 'package:khel_yuva/home/chatbotbk/chatbotscreen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:khel_yuva/constants/config.dart';
 import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
@@ -17,6 +18,7 @@ import 'package:khel_yuva/widgets/register.dart';
 import 'package:khel_yuva/home/dashboard.dart';
 import 'package:khel_yuva/home/exp points/xp.dart';
 import 'package:khel_yuva/home/personal_trainer/ptrainer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +28,7 @@ void main() async {
     anonKey: supabaseAnonKey,
   );
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

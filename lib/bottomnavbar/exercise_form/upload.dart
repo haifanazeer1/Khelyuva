@@ -27,7 +27,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
 
   // ⚠️ Change this to your PC's local IP if running on a physical device
   // Use 10.0.2.2 for Android emulator, or your PC's IP like 192.168.x.x for real device
-  static const String _backendUrl = "http://127.0.0.1:8000";
+  static const String _backendUrl = "http://127.0.0.1:8000/upload";
 
   // ================= PICK VIDEO =================
   Future<void> _pickVideo() async {
@@ -83,6 +83,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
           'file',
           _videoBytes!,
           filename: _videoFileName ?? 'exercise.mp4',
+          contentType: MediaType('video', 'mp4'),
         ),
       );
 

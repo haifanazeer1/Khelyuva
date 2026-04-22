@@ -1,17 +1,17 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter
+#from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from google import genai
+from google import genai 
 from google.genai import types
 
-app = FastAPI()
+router = APIRouter()
 
-app.add_middleware(
+'''app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
-)
+)'''
 
 client = genai.Client(
     api_key="AIzaSyBjNeaIDWTALLcAWbZYdGhxVFzPA_Oq8-8")
@@ -35,7 +35,7 @@ class ChatRequest(BaseModel):
     conversation_history: list = []
 
 
-@app.post("/chat")
+@router.post("/chat")
 def chat(req: ChatRequest):
     try:
         # Build conversation history for context
