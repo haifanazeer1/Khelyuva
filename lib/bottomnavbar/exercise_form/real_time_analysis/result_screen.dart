@@ -16,7 +16,7 @@ class _ResultScreenState extends State<ResultScreen> {
   bool isLoading = true;
   String errorMessage = "";
 
-  // ✅ FIXED BASE URL
+  // BASE URL
   final String baseUrl = "http://192.168.0.101:5000";
 
   @override
@@ -35,7 +35,7 @@ class _ResultScreenState extends State<ResultScreen> {
       print("BODY LENGTH: ${response.body.length}");
 
       if (response.statusCode == 200 && response.body.isNotEmpty) {
-        if (!mounted) return; // 🔥 IMPORTANT FIX
+        if (!mounted) return;
 
         setState(() {
           imageBase64 = response.body;
@@ -80,7 +80,7 @@ class _ResultScreenState extends State<ResultScreen> {
                       children: [
                         SizedBox(height: 20),
 
-                        // 🔥 TITLE
+                        //TITLE
                         Text(
                           widget.exercise,
                           style: TextStyle(
@@ -92,7 +92,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
                         SizedBox(height: 20),
 
-                        // 📊 GRAPH
+                        //GRAPH
                         Container(
                           margin: EdgeInsets.all(16),
                           padding: EdgeInsets.all(12),
@@ -128,7 +128,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
                         SizedBox(height: 20),
 
-                        // 🔙 BACK BUTTON
+                        // BACK BUTTON
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.cyanAccent,

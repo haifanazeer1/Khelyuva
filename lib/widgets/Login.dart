@@ -99,10 +99,7 @@ class _SignInHero extends StatelessWidget {
     );
   }
 }
-
-////////////////////////////////////////////////////////////
-/// SIGN IN FORM
-////////////////////////////////////////////////////////////
+// SIGN IN FORM
 
 class _SignInForm extends StatefulWidget {
   const _SignInForm();

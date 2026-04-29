@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/exercise_selection.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/upload.dart';
-// import your upload screen when ready
 
 class ModeSelectionScreen extends StatelessWidget {
   @override
@@ -29,7 +28,7 @@ class ModeSelectionScreen extends StatelessWidget {
 
             SizedBox(height: 30),
 
-            // 🔥 REAL-TIME CARD
+            // REAL-TIME CARD
             _buildOptionCard(
               context,
               title: "Real-Time Analysis",
@@ -47,7 +46,7 @@ class ModeSelectionScreen extends StatelessWidget {
 
             SizedBox(height: 20),
 
-            // 📤 UPLOAD CARD
+            //UPLOAD CARD
             _buildOptionCard(
               context,
               title: "Upload Video",

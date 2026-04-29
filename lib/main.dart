@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/exercise_selection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+/*import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/exercise_selection.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/live_workout.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/real_time_analysis/result_screen.dart';
-import 'package:khel_yuva/home/chatbotbk/chatbotscreen.dart';
+import 'package:khel_yuva/home/chatbotbk/chatbotscreen.dart';*/
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:khel_yuva/constants/config.dart';
-import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
+/*import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/upload.dart';
-import 'package:khel_yuva/faq.dart';
+import 'package:khel_yuva/faq.dart';*/
 import 'package:khel_yuva/home/homepage.dart';
-import 'package:khel_yuva/sidenavbar/aboutus.dart';
+/*import 'package:khel_yuva/sidenavbar/aboutus.dart';
 import 'package:khel_yuva/sidenavbar/dietrecommendation/diet.dart';
 import 'package:khel_yuva/sidenavbar/profile.dart';
 import 'package:khel_yuva/sidenavbar/settings.dart';
@@ -18,7 +19,7 @@ import 'package:khel_yuva/widgets/register.dart';
 import 'package:khel_yuva/home/dashboard.dart';
 import 'package:khel_yuva/home/exp points/xp.dart';
 import 'package:khel_yuva/home/personal_trainer/ptrainer.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';*/
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

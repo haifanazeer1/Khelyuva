@@ -22,10 +22,6 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-////////////////////////////////////////////////////////////
-/// HERO SECTION (Matches Sign In)
-////////////////////////////////////////////////////////////
-
 class _RegisterHero extends StatelessWidget {
   const _RegisterHero();
 
@@ -99,10 +95,7 @@ class _RegisterHero extends StatelessWidget {
   }
 }
 
-////////////////////////////////////////////////////////////
-/// REGISTER FORM
-////////////////////////////////////////////////////////////
-
+// REGISTER FORM
 class _RegisterForm extends StatefulWidget {
   const _RegisterForm();
 
@@ -187,7 +180,7 @@ class _RegisterFormState extends State<_RegisterForm> {
 
             const SizedBox(height: 20),
 
-            /// BACK TO LOGIN
+            //BACK TO LOGIN
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

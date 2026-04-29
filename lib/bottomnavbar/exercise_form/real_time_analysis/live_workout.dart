@@ -30,13 +30,13 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
     final videoUrl =
         "$baseUrl/video_feed?key=${Uri.encodeComponent(widget.exercise)}";
     print("VIDEO URL: $videoUrl");
-    // 🔥 WebView setup
+    // WebView setup
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.black)
       ..loadRequest(Uri.parse(videoUrl));
 
-    // 🔄 Fetch status every 1 sec
+    // Fetch status every 1 sec
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       fetchStatus();
     });
@@ -87,7 +87,7 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
       ),
       body: Column(
         children: [
-          // 🎥 VIDEO STREAM (FIXED)
+          // VIDEO STREAM (FIXED)
           Expanded(
             child: Container(
               margin: EdgeInsets.all(12),
@@ -101,7 +101,7 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
             ),
           ),
 
-          // 📊 DATA
+          // DATA
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Column(
@@ -128,7 +128,7 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
 
           SizedBox(height: 10),
 
-          // 🔴 STOP BUTTON
+          // STOP BUTTON
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: ElevatedButton(

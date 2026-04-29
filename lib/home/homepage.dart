@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/upload.dart';
+import 'package:khel_yuva/home/chatbotbk/chatbotscreen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khel_yuva/home/exp%20points/xp.dart';
 import 'package:khel_yuva/res/colors.dart';
 import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
@@ -9,7 +11,7 @@ import 'package:khel_yuva/sidenavbar/profile.dart';
 import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/bottomnavbar/progresspage.dart';
 import 'package:khel_yuva/widgets/login.dart';
-import 'package:khel_yuva/home/chatbotbk/chatbotscreen.dart';
+
 import 'package:khel_yuva/bottomnavbar/exercise_form/model_selection_screen.dart';
 import 'package:khel_yuva/home/personal_trainer/ptrainer.dart';
 
@@ -27,7 +29,7 @@ class _HomePageState extends State<HomePage>
   late AnimationController _pulseController;
   late Animation<double> _pulseAnim;
 
-  late List<Widget> _pages; // 🔥 Important: NOT const
+  late List<Widget> _pages; //  Important: NOT const
 
   @override
   void initState() {
@@ -42,9 +44,9 @@ class _HomePageState extends State<HomePage>
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
-    // 🔥 Pages list moved here
+    // Pages list moved here
     _pages = [
-      _buildHomeContent(), // Your full UI
+      _buildHomeContent(), //full UI
       const LeaderboardScreen(),
       ModeSelectionScreen(),
       const ProgressPage(),
@@ -63,7 +65,7 @@ class _HomePageState extends State<HomePage>
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      drawer: _buildDrawer(), // 🔥 Drawer added
+      drawer: _buildDrawer(), // Drawer added
       body: Stack(
         children: [
           IndexedStack(
@@ -246,15 +248,15 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── HERO BANNER (OVERFLOW FIXED) ─────────────
+  //HERO BANNER(and overflow was fixed)
   Widget _buildHeroBanner() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: ClipRRect(
-        // ← clips any stray pixels
+        // clips any stray pixels
         borderRadius: BorderRadius.circular(24),
         child: Container(
-          // No fixed height — let content decide, avoids 3-pixel overflow
+          // height not fixed so let content decide, avoids 3-pixel overflow
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             gradient: const LinearGradient(
@@ -302,11 +304,10 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
               ),
-              // Content — intrinsic height, padding handles sizing
+              // Content intrinsic height and padding handles sizing
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 22,
-                    vertical: 24), // ← generous vertical padding
+                    horizontal: 22, vertical: 24), // vertical padding
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -395,7 +396,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── QUICK STATS ──────────────────────────────
+  //quick stats
   Widget _buildQuickStats() {
     final stats = [
       {
@@ -522,7 +523,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── SECTION TITLE ────────────────────────────
+  // section title
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -542,7 +543,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── WORKOUT PLAN ─────────────────────────────
+  // Workout PLAN
   Widget _buildWorkoutPlan() {
     final workouts = [
       {
@@ -641,7 +642,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── SPORTS PICKER ────────────────────────────
+  //SPORTS PICKER
   Widget _buildSportsPicker() {
     final sports = [
       {
@@ -779,7 +780,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── AI FEEDBACK CARD ─────────────────────────
+  // AI FEEDBACK CARD
   Widget _buildAIFeedbackCard() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -910,7 +911,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── VIDEO ANALYSIS SECTION ───────────────────
+  // VIDEO ANALYSIS SECTION
   Widget _buildVideoAnalysisSection() {
     final exercises = [
       {
@@ -1018,7 +1019,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── LEADERBOARD ──────────────────────────────
+  //LEADERBOARD
   Widget _buildLeaderboard() {
     final players = [
       {'rank': 1, 'name': 'Haifa Nazeer', 'score': 980, 'state': 'MH'},
@@ -1118,7 +1119,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── OFFLINE AI STATUS ─────────────────────────
+  //OFFLINE AI STATUS
   Widget _buildAIStatusCard() {
     final features = [
       {
@@ -1228,7 +1229,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── BOTTOM NAV ───────────────────────────────
+  //    BOTTOM NAV
   Widget _buildBottomNav() {
     return BottomAppBar(
       color: KY.surface,
@@ -1269,7 +1270,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // ── FAB ──────────────────────────────────────
+  //  FAB
   Widget _buildFAB() {
     return Container(
       width: 58,
@@ -1301,7 +1302,7 @@ class _HomePageState extends State<HomePage>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => const ChatBotScreen(),
+            builder: (_) => const ProviderScope(child: ChatBotScreen()),
           ),
         );
       },
@@ -1413,12 +1414,9 @@ class _HomePageState extends State<HomePage>
   }
 }
 
-// ─────────────────────────────────────────────
 //  PULSING DOT WIDGET
-// ─────────────────────────────────────────────
 class _PulsingDot extends StatefulWidget {
   final Color color;
-  // ignore: unused_element_parameter
   const _PulsingDot({super.key, required this.color});
 
   @override
