@@ -25,11 +25,10 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
   // Analysis results
   Map<String, dynamic>? _analysisResult;
 
-  // ⚠️ Change this to your PC's local IP if running on a physical device
-  // Use 10.0.2.2 for Android emulator, or your PC's IP like 192.168.x.x for real device
+  // Use 10.0.2.2 for Android emulator
   static const String _backendUrl = "http://127.0.0.1:8000/upload";
 
-  // ================= PICK VIDEO =================
+  //PICK VIDEO
   Future<void> _pickVideo() async {
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -48,7 +47,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
       setState(() {
         _videoBytes = bytes;
         _videoFileName = pickedFile.name;
-        _analysisResult = null; // Reset previous results
+        _analysisResult = null;
       });
     } catch (e) {
       if (!mounted) return;
@@ -58,7 +57,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
     }
   }
 
-  // ================= ANALYSE VIDEO =================
+  //ANALYSING VIDEO
   Future<void> _analyseVideo() async {
     if (_videoBytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -123,7 +122,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
     }
   }
 
-  // ================= SAVE TO PROFILE =================
+  //SAVE TO PROFILE
   Future<void> _saveToProfile() async {
     if (_videoBytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -188,8 +187,6 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
     _type.dispose();
     super.dispose();
   }
-
-  // ================= UI HELPERS =================
 
   Widget _buildAngleChip(String label, double value) {
     return Container(
@@ -268,7 +265,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFF6C63FF).withOpacity(0.15),
+              color: const Color(0xFF6C63FF).withValues(alpha: .15),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
@@ -400,7 +397,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ───────── HERO HEADER ─────────
+              //HERO HEADER
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -433,7 +430,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
                 ),
               ),
 
-              // ───────── VIDEO CARD ─────────
+              //VIDEO CARD
               GestureDetector(
                 onTap: _pickVideo,
                 child: Container(
@@ -486,7 +483,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
 
               const SizedBox(height: 25),
 
-              // ───────── EXERCISE TYPE FIELD ─────────
+              //EXERCISE TYPE FIELD
               TextField(
                 controller: _type,
                 style: const TextStyle(color: Colors.white),
@@ -515,7 +512,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
 
               const SizedBox(height: 20),
 
-              // ───────── ANALYSE BUTTON ─────────
+              //ANALYSE BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -566,12 +563,12 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
                       ),
               ),
 
-              // ───────── ANALYSIS RESULTS ─────────
+              // ANALYSIS RESULTS
               _buildAnalysisResults(),
 
               const SizedBox(height: 20),
 
-              // ───────── SAVE TO PROFILE BUTTON ─────────
+              //SAVE TO PROFILE BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 50,

@@ -41,7 +41,7 @@ class _NearbyTrainersScreenState extends State<NearbyTrainersScreen> {
     }
   }
 
-  // 🗺️ CREATE MARKERS
+  // CREATE MARKERS
   Set<Marker> _buildMarkers() {
     return trainers.map<Marker>((t) {
       final lat = t['latitude'] ?? 17.385;
@@ -80,7 +80,7 @@ class _NearbyTrainersScreenState extends State<NearbyTrainersScreen> {
     );
   }
 
-  // 🔍 SEARCH BAR
+  // SEARCH BAR
   Widget _buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 6),
@@ -111,7 +111,7 @@ class _NearbyTrainersScreenState extends State<NearbyTrainersScreen> {
     );
   }
 
-  // 🗺️ REAL GOOGLE MAP
+  // REAL GOOGLE MAP
   Widget _buildMapPreview() {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -145,13 +145,14 @@ class _NearbyTrainersScreenState extends State<NearbyTrainersScreen> {
                   color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.bold)),
-          Text('See All', style: TextStyle(color: KY.accent.withOpacity(0.8))),
+          Text('See All',
+              style: TextStyle(color: KY.accent.withValues(alpha: .8))),
         ],
       ),
     );
   }
 
-  // 📋 TRAINER LIST
+  // TRAINER LIST
   Widget _buildTrainerList() {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -249,7 +250,7 @@ class _NearbyTrainersScreenState extends State<NearbyTrainersScreen> {
     );
   }
 
-  // 📅 BOOKING
+  // BOOKING
   Future<void> bookTrainer(String trainerId) async {
     final user = supabase.auth.currentUser;
 

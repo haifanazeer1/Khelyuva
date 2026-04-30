@@ -17,7 +17,7 @@ class ChatMessage {
 class ChatbotRepository {
   static String get _baseUrl {
     if (kIsWeb) {
-      return 'http://localhost:8000'; // ← this must be first
+      return 'http://localhost:8002'; // ← this must be first
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:

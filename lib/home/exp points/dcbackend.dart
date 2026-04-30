@@ -1,6 +1,4 @@
-// challenge_service.dart
 // The glue layer between your analysis backend and the challenge system.
-// ─────────────────────────────────────────────────────────────
 // HOW IT PLUGS IN:
 //   1. Your real-time pose analysis / video analysis calls
 //      `ChallengeService.recordPerformance(...)` after each session.
@@ -9,17 +7,9 @@
 //      which runs the AdaptiveChallengeEngine on the stored records.
 //   4. Weekly challenges are fetched from Firestore (online) or
 //      cached locally (offline).
-// ─────────────────────────────────────────────────────────────
-
 import 'package:flutter/foundation.dart';
-// import 'package:hive_flutter/hive_flutter.dart';       // uncomment when using
-// import 'package:cloud_firestore/cloud_firestore.dart'; // uncomment when using
-
-// Re-export from adaptive_challenges_page.dart so callers only import this file.
-// import 'adaptive_challenges_page.dart';
 
 /// Raw result from one exercise session.
-/// Populate this from your real-time / video analysis pipeline.
 class SessionResult {
   const SessionResult({
     required this.athleteId,
@@ -37,7 +27,7 @@ class SessionResult {
   final double rawValue;
   final String unit;
   final double formScore;
-  final List<String> cheatFlags; // e.g. ['partial_range', 'knee_cave']
+  final List<String> cheatFlags; // examp: ['partial_range' or 'knee_cave']
   final DateTime timestampUtc;
   final String? videoUrl;
 
@@ -69,24 +59,11 @@ class ChallengeService {
   // In-memory store (replace with Hive box in production).
   final Map<String, List<SessionResult>> _history = {};
 
-  // ── Record a new session result ────────────────────────────
-  //
-  // Call this from your analysis callback:
-  //   ChallengeService.instance.recordPerformance(result);
-  //
+  //Record a new session result
+  // Call this from your analysis callback: ChallengeService.instance.recordPerformance(result);
   Future<void> recordPerformance(SessionResult result) async {
-    // 1. Persist to Hive
-    // final box = Hive.box<Map>('sessions');
-    // await box.add(result.toJson());
-
-    // 2. Update in-memory cache
     _history.putIfAbsent(result.exerciseKey, () => []);
     _history[result.exerciseKey]!.add(result);
-
-    // 3. Optionally sync to Firestore when online
-    // await FirebaseFirestore.instance
-    //     .collection('athletes/${result.athleteId}/sessions')
-    //     .add(result.toJson());
 
     debugPrint('[ChallengeService] recorded ${result.exerciseKey}: '
         '${result.effectiveValue} ${result.unit} '
@@ -94,10 +71,8 @@ class ChallengeService {
         'cheats=${result.cheatFlags})');
   }
 
-  // ── Build PerformanceRecord list from stored history ───────
-  //
+  //Build PerformanceRecord list from stored history
   // Uses the best EFFECTIVE value from the last 7 days per exercise.
-  //
   List<PerformanceRecord> getRecentBests({int lookbackDays = 7}) {
     final cutoff = DateTime.now().subtract(Duration(days: lookbackDays));
     final records = <PerformanceRecord>[];
@@ -127,7 +102,7 @@ class ChallengeService {
     return records;
   }
 
-  // ── Generate today's adaptive daily challenges ─────────────
+  // Generate today's adaptive daily challenges
   List<AdaptiveChallenge> getDailyChallenges() {
     final bests = getRecentBests();
     if (bests.isEmpty) return _defaultChallenges();
@@ -195,44 +170,6 @@ class ChallengeService {
       ];
 }
 
-// ─────────────────────────────────────────────────────────────
-//  HOOK INTO YOUR EXISTING ANALYSIS PIPELINE
-// ─────────────────────────────────────────────────────────────
-//
-// In your real-time pose analysis callback (wherever MediaPipe /
-// TFLite fires after a set is detected):
-//
-//   void onSetCompleted(String exerciseKey, int reps, double formScore,
-//       List<String> cheats) {
-//     ChallengeService.instance.recordPerformance(SessionResult(
-//       athleteId:    currentUser.uid,
-//       exerciseKey:  exerciseKey,
-//       rawValue:     reps.toDouble(),
-//       unit:         'reps',
-//       formScore:    formScore,
-//       cheatFlags:   cheats,
-//       timestampUtc: DateTime.now().toUtc(),
-//     ));
-//   }
-//
-// In your video analysis result handler (cloud response):
-//
-//   void onVideoAnalysisResult(VideoAnalysisResult result) {
-//     ChallengeService.instance.recordPerformance(SessionResult(
-//       athleteId:    result.athleteId,
-//       exerciseKey:  result.exercise,
-//       rawValue:     result.repCount.toDouble(),
-//       unit:         'reps',
-//       formScore:    result.formScore,
-//       cheatFlags:   result.cheatFlags,
-//       timestampUtc: result.timestamp,
-//       videoUrl:     result.videoUrl,
-//     ));
-//   }
-//
-
-// Stub classes so this file compiles standalone. Remove if importing
-// from adaptive_challenges_page.dart.
 class PerformanceRecord {
   const PerformanceRecord({
     required this.exerciseKey,

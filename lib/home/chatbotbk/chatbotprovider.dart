@@ -1,9 +1,6 @@
-// lib/features/chatbot/providers/chatbot_provider.dart
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'chatbotrepo.dart';
 
-// --- State ---
 class ChatbotState {
   final List<ChatMessage> messages;
   final bool isLoading;
@@ -28,7 +25,7 @@ class ChatbotState {
   }
 }
 
-// --- Notifier ---
+//Notifier
 class ChatbotNotifier extends StateNotifier<ChatbotState> {
   final ChatbotRepository _repo;
 
@@ -59,7 +56,7 @@ class ChatbotNotifier extends StateNotifier<ChatbotState> {
         isLoading: false,
       );
     } catch (e) {
-      // 4. On error add a bot error message so UI stays consistent
+      // 4. error message for Ui to stay consistent
       final errorMsg = ChatMessage(
         type: 'bot',
         text: 'Sorry, I couldn\'t connect. Please try again. 🔌',
@@ -75,7 +72,7 @@ class ChatbotNotifier extends StateNotifier<ChatbotState> {
   void clearChat() => state = const ChatbotState();
 }
 
-// --- Providers ---
+//Providers
 final chatbotRepositoryProvider = Provider<ChatbotRepository>(
   (_) => ChatbotRepository(),
 );

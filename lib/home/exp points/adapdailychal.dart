@@ -1,8 +1,3 @@
-// adaptive_challenges_page.dart
-// Flutter 3.27+ / Dart 3.6+
-//
-// OVERVIEW
-// ─────────────────────────────────────────────────────────────
 // AdaptiveChallengesPage — the gamified challenge hub that:
 //   • reads the athlete's real-time & video-analysis performance
 //     history and auto-generates DAILY challenges at +20–40% above
@@ -10,21 +5,12 @@
 //   • shows WEEKLY elite challenges (fixed hard targets) used to
 //     rank athletes on the global leaderboard
 //   • animates an XP pop on claim, syncs with the XPPage tokens
-// ─────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
 import 'tokens.dart';
 import 'chalservices.dart'; // re-exports challenge_models.dart
 
-// ─────────────────────────────────────────────────────────────
 //  MOCK DATA  (replace with real ChallengeService calls)
-// ─────────────────────────────────────────────────────────────
-//
-// In production, swap _mockPerformance for:
-//   ChallengeService.instance.getRecentBests()
-//
-// And swap _weeklyList for a Firestore / REST fetch.
-
 final _mockPerformance = [
   PerformanceRecord(
     exerciseKey: 'pullups',
@@ -127,10 +113,7 @@ final _weeklyList = [
   ),
 ];
 
-// ─────────────────────────────────────────────────────────────
 //  PAGE
-// ─────────────────────────────────────────────────────────────
-
 class AdaptiveChallengesPage extends StatefulWidget {
   const AdaptiveChallengesPage({super.key});
   @override
@@ -256,10 +239,7 @@ class _AdaptiveChallengesPageState extends State<AdaptiveChallengesPage>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
 //  HEADER
-// ─────────────────────────────────────────────────────────────
-
 class _Header extends StatelessWidget {
   const _Header();
 
@@ -305,10 +285,7 @@ class _Header extends StatelessWidget {
       );
 }
 
-// ─────────────────────────────────────────────────────────────
 //  TAB SWITCH
-// ─────────────────────────────────────────────────────────────
-
 class _TabSwitch extends StatelessWidget {
   const _TabSwitch({required this.current, required this.onTap});
   final int current;
@@ -383,10 +360,7 @@ class _TabButton extends StatelessWidget {
       );
 }
 
-// ─────────────────────────────────────────────────────────────
 //  TAB: DAILY ADAPTIVE CHALLENGES
-// ─────────────────────────────────────────────────────────────
-
 class _DailyTab extends StatelessWidget {
   const _DailyTab({super.key, required this.challenges, required this.onClaim});
   final List<AdaptiveChallenge> challenges;
@@ -820,10 +794,7 @@ class _TipCard extends StatelessWidget {
       );
 }
 
-// ─────────────────────────────────────────────────────────────
 //  TAB: WEEKLY ELITE CHALLENGES
-// ─────────────────────────────────────────────────────────────
-
 class _WeeklyTab extends StatelessWidget {
   const _WeeklyTab({
     super.key,
@@ -1143,10 +1114,7 @@ class _RewardBadge extends StatelessWidget {
       );
 }
 
-// ─────────────────────────────────────────────────────────────
 //  SHARED ATOM — used by both Daily and Weekly cards
-// ─────────────────────────────────────────────────────────────
-
 class _Chip extends StatelessWidget {
   const _Chip({required this.label, required this.color, this.textColor});
   final String label;

@@ -1,16 +1,8 @@
-// xp_page.dart
-// Flutter 3.27+ / Dart 3.6+
-// • withValues(alpha:) replaces deprecated withOpacity()
-// • MediaQuery.viewInsetsOf / paddingOf
 // • switch expressions, records, pattern matching
 // • AnimationController late-init via field initializer
 
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-// ─────────────────────────────────────────────────────────────
-//  TOKENS  (re-declared for standalone use; remove if shared)
-// ─────────────────────────────────────────────────────────────
 
 const _bg = Color(0xFF0A0E1A);
 const _card = Color(0xFF111827);
@@ -26,16 +18,12 @@ const _muted = Color(0xFF64748B);
 const _sub = Color(0xFF475569);
 const _slate = Color(0xFF94A3B8);
 
-// ─────────────────────────────────────────────────────────────
 //  STATIC DATA
-// ─────────────────────────────────────────────────────────────
-
 const kUserXP = 620;
 const kNextLevelXP = 1000;
 const kLevel = 7;
 const kStreak = 12;
 
-// Dart 3 records — lightweight, no class boilerplate
 typedef XPEvent = ({
   int id,
   String action,
@@ -223,10 +211,7 @@ const _weeklyData = <({String day, int xp})>[
 
 const _tabs = ['Overview', 'Challenges', 'Competitions', 'Rewards', 'History'];
 
-// ─────────────────────────────────────────────────────────────
 //  PAGE
-// ─────────────────────────────────────────────────────────────
-
 class XPPage extends StatefulWidget {
   const XPPage({super.key});
   @override
@@ -343,7 +328,7 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
     );
   }
 
-  // ── Header ────────────────────────────────────────────────
+  // Header
 
   Widget _buildHeader() {
     return Padding(
@@ -388,7 +373,7 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
     );
   }
 
-  // ── XP Hero Card ──────────────────────────────────────────
+  //XP Hero Card
 
   Widget _buildHeroCard() {
     final pct = kUserXP / kNextLevelXP;
@@ -486,7 +471,7 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
     );
   }
 
-  // ── Quick Stats ───────────────────────────────────────────
+  //Quick Stats
 
   Widget _buildQuickStats() {
     const stats = [
@@ -543,7 +528,7 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
     );
   }
 
-  // ── Tab bar ───────────────────────────────────────────────
+  //Tab bar
 
   Widget _buildTabBar() {
     return SizedBox(
@@ -582,7 +567,7 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
     );
   }
 
-  // ── Tab content ───────────────────────────────────────────
+  //Tab content
 
   Widget _buildTabContent() {
     return AnimatedSwitcher(
@@ -606,10 +591,7 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
 //  TAB: OVERVIEW
-// ─────────────────────────────────────────────────────────────
-
 class _OverviewTab extends StatelessWidget {
   const _OverviewTab({super.key});
 
@@ -677,7 +659,7 @@ class _OverviewTab extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // Recent activity
+        // Recent activitY
         _SectionCard(
           title: 'Recent Activity',
           child: Column(
@@ -747,10 +729,7 @@ class _OverviewTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
 //  TAB: CHALLENGES
-// ─────────────────────────────────────────────────────────────
-
 class _ChallengesTab extends StatelessWidget {
   const _ChallengesTab(
       {super.key, required this.claimed, required this.onClaim});
@@ -950,10 +929,7 @@ class _ChallengesTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
 //  TAB: COMPETITIONS
-// ─────────────────────────────────────────────────────────────
-
 class _CompetitionsTab extends StatelessWidget {
   const _CompetitionsTab(
       {super.key, required this.joined, required this.onJoin});
@@ -1085,10 +1061,7 @@ class _CompetitionsTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
 //  TAB: REWARDS
-// ─────────────────────────────────────────────────────────────
-
 class _RewardsTab extends StatelessWidget {
   const _RewardsTab({super.key});
 
@@ -1237,10 +1210,7 @@ class _RewardsTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
 //  TAB: HISTORY
-// ─────────────────────────────────────────────────────────────
-
 class _HistoryTab extends StatelessWidget {
   const _HistoryTab({super.key});
 
@@ -1284,10 +1254,7 @@ class _HistoryTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
 //  ATOMS
-// ─────────────────────────────────────────────────────────────
-
 class _LevelBadge extends StatefulWidget {
   const _LevelBadge({required this.level});
   final int level;

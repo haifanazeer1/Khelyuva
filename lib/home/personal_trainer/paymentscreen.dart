@@ -51,7 +51,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // 🧑 Trainer Info Card
+            // Trainer Info Card
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -86,7 +86,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             const SizedBox(height: 20),
 
-            // 💰 Payment Summary
+            //Payment Summary
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -107,7 +107,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             const Spacer(),
 
-            // 🔥 PAY BUTTON
+            // PAY BUTTON
             GestureDetector(
               onTap: isLoading ? null : confirmBooking,
               child: Container(

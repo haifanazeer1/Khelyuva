@@ -1,14 +1,5 @@
-// challenge_models.dart
-// ─────────────────────────────────────────────────────────────
 // ALL shared domain models + AdaptiveChallengeEngine live here.
-// Import ONLY this file from challenge_service.dart and
-// adaptive_challenges_page.dart — never redeclare these classes.
-// ─────────────────────────────────────────────────────────────
-
-// ── Domain Models ─────────────────────────────────────────────
-
-/// One metric snapshot from real-time pose analysis or video analysis.
-/// Your backend / AI engine populates this and passes it to the engine.
+/// backend / AI engine populates this and passes it to the engine.
 class PerformanceRecord {
   const PerformanceRecord({
     required this.exerciseKey,
@@ -61,17 +52,13 @@ class AdaptiveChallenge {
   final int xp;
   final String category;
   final String icon;
-
-  /// 'Adaptive' | 'Stretch' | 'Peak'
   final String difficulty;
-
-  /// e.g. "↑ 2 reps from your best • ⚡ Great form bonus!"
   final String adaptationNote;
 
   bool isClaimed;
 }
 
-/// Weekly elite challenge — harder, fixed targets used to rank
+/// Weekly elite challenge - harder, fixed targets used to rank
 /// athletes on the global leaderboard.
 class WeeklyChallenge {
   const WeeklyChallenge({
@@ -112,15 +99,6 @@ class WeeklyChallenge {
 
   final bool isJoined;
 }
-
-// ── Adaptive Challenge Engine ──────────────────────────────────
-//
-// Call AdaptiveChallengeEngine.generate(records) with the athlete's
-// recent best PerformanceRecords to get today's personalised challenges.
-//
-// Growth rules:
-//   formScore >= 0.80  →  +40% (Stretch difficulty)
-//   formScore <  0.80  →  +20% (Adaptive difficulty)
 
 class AdaptiveChallengeEngine {
   AdaptiveChallengeEngine._();
