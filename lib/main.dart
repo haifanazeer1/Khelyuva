@@ -43,7 +43,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      home: Supabase.instance.client.auth.currentSession == null
+          ? const SignInScreen()
+          : const HomePage(),
     );
   }
 }

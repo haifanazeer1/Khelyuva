@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khel_yuva/widgets/login.dart'; // adjust if needed
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -115,6 +116,70 @@ class _RegisterFormState extends State<_RegisterForm> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmController = TextEditingController();
+  bool isLoading = false;
+  Future<void> signUp() async {
+    final name = nameController.text.trim();
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final confirm = confirmController.text.trim();
+
+    // Validation
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirm.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill all fields")),
+      );
+      return;
+    }
+
+    if (password != confirm) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Passwords do not match")),
+      );
+      return;
+    }
+
+    try {
+      setState(() => isLoading = true);
+
+      final response = await Supabase.instance.client.auth.signUp(
+        email: email,
+        password: password,
+      );
+
+      final user = response.user;
+
+      if (user != null) {
+        // Create profile row
+        await Supabase.instance.client.from('profiles').insert({
+          'id': user.id,
+          'full_name': name,
+        });
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Account created successfully"),
+            ),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const SignInScreen(),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,20 +233,19 @@ class _RegisterFormState extends State<_RegisterForm> {
                   ),
                   elevation: 0,
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SignInScreen()),
-                  );
-                },
-                child: const Text(
-                  "Sign Up",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    letterSpacing: 0.5,
-                  ),
-                ),
+                onPressed: isLoading ? null : signUp,
+                child: isLoading
+                    ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
               ),
             ),
 
@@ -245,5 +309,14 @@ class _RegisterFormState extends State<_RegisterForm> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmController.dispose();
+    super.dispose();
   }
 }

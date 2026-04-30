@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khel_yuva/home/homepage.dart';
 import 'package:khel_yuva/widgets/register.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -112,8 +113,61 @@ class _SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<_SignInForm> {
+  bool isLoading = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  Future<void> signIn() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please fill all fields"),
+        ),
+      );
+      return;
+    }
+
+    try {
+      setState(() => isLoading = true);
+
+      await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const HomePage(),
+          ),
+        );
+      }
+    } on AuthException catch (e) {
+      String errorMessage = "Login failed";
+
+      if (e.message.toLowerCase().contains("invalid login credentials")) {
+        errorMessage = "Incorrect email or password";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,12 +208,7 @@ class _SignInFormState extends State<_SignInForm> {
                   ),
                   elevation: 0,
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HomePage()),
-                  );
-                },
+                onPressed: isLoading ? null : signIn,
                 child: const Text(
                   "Sign In",
                   style: TextStyle(
@@ -185,7 +234,9 @@ class _SignInFormState extends State<_SignInForm> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => const RegisterScreen(),
+                      ),
                     );
                   },
                   child: const Text(
@@ -195,7 +246,7 @@ class _SignInFormState extends State<_SignInForm> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                )
+                ),
               ],
             )
           ],
@@ -231,5 +282,12 @@ class _SignInFormState extends State<_SignInForm> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }
