@@ -96,8 +96,6 @@ class _ChatBotScreenState extends ConsumerState<ChatBotScreen> {
 
                 final msg = chatState.messages[index];
                 final isUser = msg.type == 'user';
-
-                // ---- Your original bubble UI, unchanged ----
                 return Align(
                   alignment:
                       isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -119,8 +117,6 @@ class _ChatBotScreenState extends ConsumerState<ChatBotScreen> {
               },
             ),
           ),
-
-          // ---- Your original input bar, unchanged ----
           Container(
             padding: const EdgeInsets.all(12),
             decoration: const BoxDecoration(
@@ -153,7 +149,7 @@ class _ChatBotScreenState extends ConsumerState<ChatBotScreen> {
   }
 }
 
-// Simple animated loading dot — uses your KY.accent color
+// Simple animated loading dot uses KY.accent color
 class _DotIndicator extends StatefulWidget {
   final int delay;
   const _DotIndicator({required this.delay});

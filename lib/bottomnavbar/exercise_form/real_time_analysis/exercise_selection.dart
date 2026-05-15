@@ -54,7 +54,7 @@ class ExerciseSelectionScreen extends StatelessWidget {
                   Icon(Icons.fitness_center,
                       color: Colors.cyanAccent, size: 40),
                   SizedBox(height: 10),
-                  // ✅ FIXED TEXT
+                  // FIXED TEXT
                   Text(
                     exercises[index],
                     textAlign: TextAlign.center,

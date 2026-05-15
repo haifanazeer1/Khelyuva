@@ -1,8 +1,5 @@
 // app_tokens.dart
-// ─────────────────────────────────────────────────────────────
-// SINGLE SOURCE OF TRUTH for design tokens.
 // Import this file everywhere — never redeclare these constants.
-// ─────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
 

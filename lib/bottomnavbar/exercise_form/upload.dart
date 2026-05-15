@@ -16,7 +16,6 @@ class UploadFormScreen extends StatefulWidget {
 
 class _UploadFormScreenState extends State<UploadFormScreen> {
   final TextEditingController _type = TextEditingController();
-  bool _isLoading = false;
   bool _isAnalyzing = false;
   bool _isSaving = false;
   Uint8List? _videoBytes;
@@ -99,6 +98,37 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
           _analysisResult = data;
           _isAnalyzing = false;
         });
+
+        final user = Supabase.instance.client.auth.currentUser;
+        if (user != null) {
+          // SAVE XP HISTORY
+          await Supabase.instance.client.from('xp_history').insert({
+            'user_id': user.id,
+            'action': 'Completed Pushup Analysis',
+            'xp': 50,
+            'type': 'workout',
+          });
+          // GET CURRENT XP
+          final profile = await Supabase.instance.client
+              .from('profiles')
+              .select('total_xp')
+              .eq('id', user.id)
+              .single();
+
+          final currentXP = profile['total_xp'] ?? 0;
+          // UPDATE TOTAL XP
+          await Supabase.instance.client.from('profiles').update({
+            'total_xp': currentXP + 50,
+          }).eq('id', user.id);
+          // OPTIONAL SUCCESS MESSAGE
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('+50 XP Earned! ⚡'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
       } else {
         final error = jsonDecode(response.body);
         setState(() => _isAnalyzing = false);
@@ -194,7 +224,8 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A3E),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF6C63FF).withOpacity(0.4)),
+        border:
+            Border.all(color: const Color(0xFF6C63FF).withValues(alpha: 0.4)),
       ),
       child: Column(
         children: [
@@ -231,7 +262,8 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A2E),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF6C63FF).withOpacity(0.4)),
+        border:
+            Border.all(color: const Color(0xFF6C63FF).withValues(alpha: 0.4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

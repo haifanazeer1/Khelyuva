@@ -171,7 +171,7 @@ class ChallengeService {
     return records;
   }
 
-  // ── Generate today's adaptive daily challenges ───────────────
+  // Generate today's adaptive daily challenges
 
   List<AdaptiveChallenge> getDailyChallenges() {
     final bests = getRecentBests();
@@ -180,9 +180,8 @@ class ChallengeService {
         : AdaptiveChallengeEngine.generate(bests);
   }
 
-  // ── Weekly challenge video submission ────────────────────────
-  //
-  // Called after your backend verifies the athlete's video.
+  // Weekly challenge video submission
+  // Called after backend verifies the athlete's video.
 
   Future<void> submitWeeklyResult({
     required String athleteId,
@@ -208,7 +207,7 @@ class ChallengeService {
         'form=${formScore.toStringAsFixed(2)}');
   }
 
-  // ── Fallback challenges when no history exists yet ───────────
+  //Fallback challenges when no history exists yet
 
   List<AdaptiveChallenge> _defaultChallenges() => [
         AdaptiveChallenge(

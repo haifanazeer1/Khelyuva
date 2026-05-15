@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 const _bg = Color(0xFF0A0E1A);
 const _card = Color(0xFF111827);
@@ -18,11 +19,17 @@ const _muted = Color(0xFF64748B);
 const _sub = Color(0xFF475569);
 const _slate = Color(0xFF94A3B8);
 
-//  STATIC DATA
+/*  STATIC DATA
 const kUserXP = 620;
 const kNextLevelXP = 1000;
 const kLevel = 7;
 const kStreak = 12;
+*/
+int userXP = 0;
+int userLevel = 1;
+int streak = 0;
+const kNextLevelXP = 1000;
+bool isLoading = true;
 
 typedef XPEvent = ({
   int id,
@@ -127,7 +134,7 @@ const _history = <XPEvent>[
   ),
 ];
 
-const _challenges = <Challenge>[
+const challenges = <Challenge>[
   (
     id: 1,
     title: '200 Jump Ropes',
@@ -228,6 +235,136 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
   final Set<int> _joined = {1};
 
   Timer? _countTimer;
+  List<Challenge> generateAdaptiveChallenges() {
+    if (sessionResults.isEmpty) {
+      return [
+        (
+          id: 1,
+          title: 'Complete Your First Workout',
+          xp: 50,
+          difficulty: 'Easy',
+          category: 'Starter',
+          icon: '🔥'
+        ),
+      ];
+    }
+
+    final lastSession = sessionResults.first;
+
+    final reps = lastSession['reps'] ?? 0;
+    final accuracy = lastSession['accuracy'] ?? 0;
+
+    // HARD USER
+    if (reps > 40 && accuracy > 85) {
+      return [
+        (
+          id: 1,
+          title: '60 Pushups Challenge',
+          xp: 200,
+          difficulty: 'Hard',
+          category: 'Strength',
+          icon: '💪'
+        ),
+        (
+          id: 2,
+          title: '5km Endurance Run',
+          xp: 180,
+          difficulty: 'Hard',
+          category: 'Cardio',
+          icon: '🏃'
+        ),
+      ];
+    }
+
+    // MEDIUM USER
+    if (reps > 20) {
+      return [
+        (
+          id: 1,
+          title: '35 Pushups Challenge',
+          xp: 120,
+          difficulty: 'Medium',
+          category: 'Strength',
+          icon: '🔥'
+        ),
+        (
+          id: 2,
+          title: '2km Run',
+          xp: 100,
+          difficulty: 'Medium',
+          category: 'Cardio',
+          icon: '🏃'
+        ),
+      ];
+    }
+
+    // BEGINNER USER
+    return [
+      (
+        id: 1,
+        title: '15 Pushups Challenge',
+        xp: 60,
+        difficulty: 'Easy',
+        category: 'Starter',
+        icon: '✨'
+      ),
+      (
+        id: 2,
+        title: '10 Minute Walk',
+        xp: 40,
+        difficulty: 'Easy',
+        category: 'Recovery',
+        icon: '🚶'
+      ),
+    ];
+  }
+
+  List<Map<String, dynamic>> sessionResults = [];
+  // LOAD SESSION RESULTS
+  Future<void> loadSessionResults() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+
+      if (user == null) return;
+
+      final data = await Supabase.instance.client
+          .from('session_results')
+          .select()
+          .eq('user_id', user.id)
+          .order('created_at', ascending: false);
+
+      if (!mounted) return;
+
+      setState(() {
+        sessionResults = List<Map<String, dynamic>>.from(data);
+      });
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
+
+  Future<void> loadProfile() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+
+      final data = await Supabase.instance.client
+          .from('profiles')
+          .select()
+          .eq('id', user!.id)
+          .single();
+
+      if (!mounted) return;
+
+      setState(() {
+        userXP = data['total_xp'] ?? 0;
+        userLevel = data['level'] ?? 1;
+        streak = data['streak'] ?? 0;
+        isLoading = false;
+      });
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
 
   // XP pop animation
   late final _popCtrl = AnimationController(
@@ -243,16 +380,18 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    loadProfile();
+    loadSessionResults();
     WidgetsBinding.instance.addPostFrameCallback((_) => _countUp());
   }
 
   void _countUp() {
     const steps = 60;
-    final step = kUserXP / steps;
+    final step = userXP / steps;
     var count = 0;
     _countTimer = Timer.periodic(const Duration(milliseconds: 18), (t) {
       count++;
-      setState(() => _displayXP = (step * count).round().clamp(0, kUserXP));
+      setState(() => _displayXP = (step * count).round().clamp(0, userXP));
       if (count >= steps) t.cancel();
     });
   }
@@ -362,8 +501,8 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
           child: Row(children: [
             const Text('🔥', style: TextStyle(fontSize: 15)),
             const SizedBox(width: 4),
-            const Text('$kStreak Day Streak',
-                style: TextStyle(
+            Text('$streak Day Streak',
+                style: const TextStyle(
                     color: Color(0xFFF87171),
                     fontWeight: FontWeight.w700,
                     fontSize: 13)),
@@ -376,7 +515,7 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
   //XP Hero Card
 
   Widget _buildHeroCard() {
-    final pct = kUserXP / kNextLevelXP;
+    final pct = userXP / 1000;
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
       child: Container(
@@ -391,7 +530,7 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
           borderRadius: BorderRadius.circular(22),
         ),
         child: Row(children: [
-          _LevelBadge(level: kLevel),
+          _LevelBadge(level: userLevel),
           const SizedBox(width: 20),
           Expanded(
               child: Column(
@@ -417,7 +556,7 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
                   Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                     const Text('Next Level',
                         style: TextStyle(color: _muted, fontSize: 11)),
-                    Text('${kNextLevelXP - kUserXP} XP away',
+                    Text('${kNextLevelXP - userXP} XP away',
                         style: const TextStyle(
                             color: _slate,
                             fontSize: 14,
@@ -455,12 +594,12 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Lvl $kLevel — Warrior Athlete',
-                      style: TextStyle(
+                  Text('Lvl $userLevel — Warrior Athlete',
+                      style: const TextStyle(
                           color: _green,
                           fontSize: 11,
                           fontWeight: FontWeight.w600)),
-                  Text('Lvl ${kLevel + 1} — Elite →',
+                  Text('Lvl ${userLevel + 1} — Elite →',
                       style: const TextStyle(color: _sub, fontSize: 11)),
                 ],
               ),
@@ -573,11 +712,12 @@ class _XPPageState extends State<XPPage> with TickerProviderStateMixin {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 240),
       child: switch (_tabIndex) {
-        0 => _OverviewTab(key: const ValueKey(0)),
+        0 => const _OverviewTab(key: ValueKey(0)),
         1 => _ChallengesTab(
             key: const ValueKey(1),
             claimed: _claimed,
             onClaim: _claimChallenge,
+            challenges: generateAdaptiveChallenges(),
           ),
         2 => _CompetitionsTab(
             key: const ValueKey(2),
@@ -680,7 +820,7 @@ class _OverviewTab extends StatelessWidget {
               itemCount: 31,
               itemBuilder: (_, i) {
                 final day = i + 1;
-                final done = day <= kStreak;
+                final done = day <= streak;
                 return Container(
                   decoration: BoxDecoration(
                     gradient: done
@@ -731,15 +871,20 @@ class _OverviewTab extends StatelessWidget {
 
 //  TAB: CHALLENGES
 class _ChallengesTab extends StatelessWidget {
-  const _ChallengesTab(
-      {super.key, required this.claimed, required this.onClaim});
+  const _ChallengesTab({
+    super.key,
+    required this.claimed,
+    required this.onClaim,
+    required this.challenges,
+  });
   final Set<int> claimed;
   final void Function(int id, int xp) onClaim;
+  final List<Challenge> challenges;
 
   @override
   Widget build(BuildContext context) {
     final done = claimed.length;
-    final total = _challenges.length;
+    final total = challenges.length;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
@@ -747,16 +892,18 @@ class _ChallengesTab extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('Daily Challenges',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700)),
-              const SizedBox(height: 2),
-              const Text('Resets in 4h 32m  •  Complete all for +200 XP',
-                  style: TextStyle(color: _muted, fontSize: 12)),
-            ]),
+            const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Daily Challenges',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700)),
+                  SizedBox(height: 2),
+                  Text('Resets in 4h 32m  •  Complete all for +200 XP',
+                      style: TextStyle(color: _muted, fontSize: 12)),
+                ]),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
@@ -774,7 +921,7 @@ class _ChallengesTab extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        for (final c in _challenges) ...[
+        for (final c in challenges) ...[
           Opacity(
             opacity: claimed.contains(c.id) ? 0.65 : 1.0,
             child: Container(
@@ -884,15 +1031,15 @@ class _ChallengesTab extends StatelessWidget {
             ),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('All-Complete Bonus',
+                  Text('All-Complete Bonus',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.w700)),
-                  const Text('+200 XP',
+                  Text('+200 XP',
                       style: TextStyle(
                           color: _gold,
                           fontSize: 17,
