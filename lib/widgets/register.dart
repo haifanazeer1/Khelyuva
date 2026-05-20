@@ -139,13 +139,21 @@ class _RegisterFormState extends State<_RegisterForm> {
         password: password,
       );
 
-      final user = response.user;
+      final user = Supabase.instance.client.auth.currentUser;
 
       if (user != null) {
         // Create profile row
         await Supabase.instance.client.from('profiles').insert({
           'id': user.id,
-          'full_name': name,
+          'name': name,
+          'email': email,
+          'phone': '',
+          'state': '',
+          'city': '',
+          'address': '',
+          'total_xp': 0,
+          'level': 1,
+          'streak': 0,
         });
 
         if (mounted) {

@@ -17,7 +17,7 @@ import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/widgets/login.dart';
 import 'package:khel_yuva/widgets/register.dart';
 import 'package:khel_yuva/home/dashboard.dart';
-import 'package:khel_yuva/home/exp points/xp.dart';
+import 'package:khel_yuva/home/exppoints/xp.dart';
 import 'package:khel_yuva/home/personal_trainer/ptrainer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

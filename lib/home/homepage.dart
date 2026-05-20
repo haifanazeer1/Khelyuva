@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:khel_yuva/bottomnavbar/exercise_form/upload.dart';
 import 'package:khel_yuva/home/chatbotbk/chatbotscreen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:khel_yuva/home/exp%20points/xp.dart';
+import 'package:khel_yuva/home/exppoints/xp.dart';
 import 'package:khel_yuva/res/colors.dart';
 import 'package:khel_yuva/bottomnavbar/leaderboard.dart';
 import 'package:khel_yuva/sidenavbar/aboutus.dart';

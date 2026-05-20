@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khel_yuva/home/homepage.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,7 +11,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool isEditing = false;
-
+  final supabase = Supabase.instance.client;
   final TextEditingController _name = TextEditingController(text: "Name");
   final TextEditingController _email =
       TextEditingController(text: "name@example.com");
@@ -48,7 +49,11 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         actions: [
           TextButton.icon(
-            onPressed: () {
+            onPressed: () async {
+              if (isEditing) {
+                await saveProfile();
+              }
+
               setState(() => isEditing = !isEditing);
             },
             icon: Icon(
@@ -70,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _ProfileHero(),
+            _ProfileHero(name: _name.text),
             const SizedBox(height: 30),
             _ProfileForm(
               isEditing: isEditing,
@@ -86,6 +91,57 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfile();
+  }
+
+  Future<void> fetchProfile() async {
+    final user = supabase.auth.currentUser;
+
+    if (user == null) return;
+
+    final data = await supabase
+        .from('profiles')
+        .select()
+        .eq('id', user.id)
+        .maybeSingle();
+
+    if (data != null) {
+      setState(() {
+        _name.text = data['name'] ?? '';
+        _email.text = data['email'] ?? '';
+        _phone.text = data['phone'] ?? '';
+        _state.text = data['state'] ?? '';
+        _city.text = data['city'] ?? '';
+        _address.text = data['address'] ?? '';
+      });
+    }
+  }
+
+  Future<void> saveProfile() async {
+    final user = supabase.auth.currentUser;
+
+    if (user == null) return;
+
+    await supabase.from('profiles').upsert({
+      'id': user.id,
+      'name': _name.text,
+      'email': _email.text,
+      'phone': _phone.text,
+      'state': _state.text,
+      'city': _city.text,
+      'address': _address.text,
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Profile Updated"),
+      ),
+    );
+  }
 }
 
 ////////////////////////////////////////////////////////////////
@@ -93,6 +149,9 @@ class _ProfilePageState extends State<ProfilePage> {
 ////////////////////////////////////////////////////////////////
 
 class _ProfileHero extends StatelessWidget {
+  final String name;
+
+  const _ProfileHero({required this.name, super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -123,9 +182,9 @@ class _ProfileHero extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Center(
+            child: Center(
               child: Text(
-                "N",
+                name.isNotEmpty ? name[0].toUpperCase() : "U",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -135,8 +194,8 @@ class _ProfileHero extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            "Name",
+          Text(
+            name.isNotEmpty ? name : "User",
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,
