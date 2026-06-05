@@ -24,22 +24,33 @@ class XPPage extends StatefulWidget {
 }
 
 class _XPPageState extends State<XPPage> {
-  late ActivityResult current;
+  ActivityResult? current;
 
   @override
   void initState() {
     super.initState();
+    loadLatestSession();
+  }
 
-    current = ActivityEngine.analyze(
-      reps: 42,
-      accuracy: 0.86,
-    );
+  Future<void> loadLatestSession() async {
+    final session = await ActivityService.getLatestSession();
 
-    ActivityService.addSession(current);
+    if (session == null) return;
+    ActivityService.addSession(session);
+    setState(() {
+      current = session;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (current == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     final totalXP = ActivityService.getTotalXP();
     final level = ActivityService.getLevel();
     final streak = ActivityService.getStreak();
@@ -199,12 +210,12 @@ class _XPPageState extends State<XPPage> {
                         width: 70,
                         height: 70,
                         decoration: BoxDecoration(
-                          color: current.color.withOpacity(0.15),
+                          color: current!.color.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Center(
                           child: Text(
-                            current.icon,
+                            current!.icon,
                             style: const TextStyle(fontSize: 34),
                           ),
                         ),
@@ -215,23 +226,30 @@ class _XPPageState extends State<XPPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              current.activityLevel,
+                              current!.activityLevel,
                               style: TextStyle(
-                                color: current.color,
+                                color: current!.color,
                                 fontSize: 22,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              "${current.reps} repetitions detected",
+                              "Knee Angle: ${current!.kneeAngle.toStringAsFixed(1)}°",
                               style: const TextStyle(
                                 color: _slate,
                                 fontSize: 14,
                               ),
                             ),
                             Text(
-                              "Accuracy ${(current.accuracy * 100).toStringAsFixed(0)}%",
+                              "Hip Angle: ${current!.hipAngle.toStringAsFixed(1)}°",
+                              style: const TextStyle(
+                                color: _slate,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              "Shoulder Angle: ${current!.shoulderAngle.toStringAsFixed(1)}°",
                               style: const TextStyle(
                                 color: _slate,
                                 fontSize: 14,
@@ -248,14 +266,14 @@ class _XPPageState extends State<XPPage> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              current.color,
-                              current.color.withOpacity(0.7)
+                              current!.color,
+                              current!.color.withOpacity(0.7)
                             ],
                           ),
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Text(
-                          "+${current.xp} XP",
+                          "+${current!.xp} XP",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w800,
@@ -268,17 +286,17 @@ class _XPPageState extends State<XPPage> {
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: current.color.withOpacity(0.08),
+                      color: current!.color.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Text(
-                      current.activityLevel == "Highly Active"
-                          ? "Excellent performance! Athlete mode unlocked ⚡"
-                          : current.activityLevel == "Medium Active"
-                              ? "Nice work! You're improving 🔥"
-                              : "Good start! Keep moving 💪",
+                      current!.activityLevel == "Athlete"
+                          ? "Excellent posture! Athlete badge unlocked ⚡"
+                          : current!.activityLevel == "Consistent"
+                              ? "Great work! Keep improving your form 🔥"
+                              : "Good start! Focus on posture and consistency 🌱",
                       style: TextStyle(
-                        color: current.color,
+                        color: current!.color,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

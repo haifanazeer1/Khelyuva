@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ActivityResult {
-  final int reps;
-  final double accuracy;
+  final double kneeAngle;
+  final double hipAngle;
+  final double shoulderAngle;
+
   final String activityLevel;
   final int xp;
   final String badge;
@@ -10,8 +12,9 @@ class ActivityResult {
   final String icon;
 
   ActivityResult({
-    required this.reps,
-    required this.accuracy,
+    required this.kneeAngle,
+    required this.hipAngle,
+    required this.shoulderAngle,
     required this.activityLevel,
     required this.xp,
     required this.badge,
@@ -22,41 +25,54 @@ class ActivityResult {
 
 class ActivityEngine {
   static ActivityResult analyze({
-    required int reps,
-    required double accuracy,
+    required double knee,
+    required double hip,
+    required double shoulder,
+    required String feedback,
   }) {
-    final score = reps + (accuracy * 20);
+    int score = 0;
 
-    if (score < 25) {
+    if (knee >= 70 && knee <= 120) score += 30;
+    if (hip >= 80 && hip <= 150) score += 30;
+    if (shoulder >= 80 && shoulder <= 150) score += 30;
+
+    if (feedback.toLowerCase().contains('excellent')) {
+      score += 10;
+    }
+
+    if (score < 40) {
       return ActivityResult(
-        reps: reps,
-        accuracy: accuracy,
-        activityLevel: "Low Active",
+        kneeAngle: knee,
+        hipAngle: hip,
+        shoulderAngle: shoulder,
+        activityLevel: "Beginner",
         xp: 30,
-        badge: "Beginner",
+        badge: "🌱 Beginner",
         color: const Color(0xFF06B6D4),
         icon: "🌱",
       );
     }
 
-    if (score < 60) {
+    if (score < 80) {
       return ActivityResult(
-        reps: reps,
-        accuracy: accuracy,
-        activityLevel: "Medium Active",
+        kneeAngle: knee,
+        hipAngle: hip,
+        shoulderAngle: shoulder,
+        activityLevel: "Consistent",
         xp: 70,
-        badge: "Consistent",
+        badge: "🔥 Consistent",
         color: const Color(0xFFF97316),
         icon: "🔥",
       );
     }
 
     return ActivityResult(
-      reps: reps,
-      accuracy: accuracy,
-      activityLevel: "Highly Active",
+      kneeAngle: knee,
+      hipAngle: hip,
+      shoulderAngle: shoulder,
+      activityLevel: "Athlete",
       xp: 150,
-      badge: "Athlete",
+      badge: "⚡ Athlete",
       color: const Color(0xFF4ADE80),
       icon: "⚡",
     );

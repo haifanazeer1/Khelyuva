@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:http_parser/http_parser.dart';
+import 'package:khel_yuva/home/exppoints/activity_model.dart';
 
 class UploadFormScreen extends StatefulWidget {
   const UploadFormScreen({super.key});
@@ -94,18 +95,39 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        final angles = data['angles'];
+
+        final result = ActivityEngine.analyze(
+          knee: (angles['average_knee_angle'] as num).toDouble(),
+          hip: (angles['average_hip_angle'] as num).toDouble(),
+          shoulder: (angles['average_shoulder_angle'] as num).toDouble(),
+          feedback: data['feedback']['overall'],
+        );
+        final user = Supabase.instance.client.auth.currentUser;
+
+        if (user != null) {
+          await Supabase.instance.client.from('session_results').insert({
+            'user_id': user.id,
+            'knee_angle': result.kneeAngle,
+            'hip_angle': result.hipAngle,
+            'shoulder_angle': result.shoulderAngle,
+            'activity_level': result.activityLevel,
+            'badge': result.badge,
+            'xp': result.xp,
+          });
+        }
+
         setState(() {
           _analysisResult = data;
           _isAnalyzing = false;
         });
 
-        final user = Supabase.instance.client.auth.currentUser;
         if (user != null) {
           // SAVE XP HISTORY
           await Supabase.instance.client.from('xp_history').insert({
             'user_id': user.id,
             'action': 'Completed Pushup Analysis',
-            'xp': 50,
+            'xp': result.xp,
             'type': 'workout',
           });
           // GET CURRENT XP
@@ -116,18 +138,21 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
               .single();
 
           final currentXP = profile['total_xp'] ?? 0;
-          // UPDATE TOTAL XP
+
+          final updatedXP = currentXP + result.xp;
+
+          final level = (updatedXP ~/ 300) + 1;
+
           await Supabase.instance.client.from('profiles').update({
-            'total_xp': currentXP + 50,
+            'total_xp': updatedXP,
+            'level': level,
           }).eq('id', user.id);
           // OPTIONAL SUCCESS MESSAGE
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('+50 XP Earned! ⚡'),
-              backgroundColor: Colors.green,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('+${result.xp} XP Earned! ⚡'),
+            backgroundColor: Colors.green,
+          ));
         }
       } else {
         final error = jsonDecode(response.body);
