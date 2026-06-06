@@ -258,14 +258,7 @@ class _BodyDetailsPageState extends State<BodyDetailsPage> {
 
     try {
       final supabase = Supabase.instance.client;
-
-      // Get the currently logged-in user's ID
-      // This is required because RLS policies only allow users to insert their own data
-
-      // Insert data into the 'physical_health' table
-      // inside the 'physical_health' schema in Supabase
-      // Column names must exactly match what's in Supabase:
-      //   age, height_cm, weight_kg, fitness_goal, activity_level, user_id
+      final user = supabase.auth.currentUser;
       await supabase.schema('physical_health').from('physical_health').insert({
         // links row to logged-in user
         'age': int.parse(ageController.text.trim()), // stored as integer

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'activity_model.dart';
 import 'activity_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 const _bg = Color(0xFF0A0E1A);
 const _card = Color(0xFF111827);
@@ -26,10 +27,33 @@ class XPPage extends StatefulWidget {
 class _XPPageState extends State<XPPage> {
   ActivityResult? current;
 
+  int totalXP = 0;
+  int level = 1;
+  int streak = 0;
+
+  Future<void> loadProfileData() async {
+    final user = Supabase.instance.client.auth.currentUser;
+
+    if (user == null) return;
+
+    final profile = await Supabase.instance.client
+        .from('profiles')
+        .select('total_xp, level, streak')
+        .eq('id', user.id)
+        .single();
+
+    setState(() {
+      totalXP = profile['total_xp'] ?? 0;
+      level = profile['level'] ?? 1;
+      streak = profile['streak'] ?? 0;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     loadLatestSession();
+    loadProfileData();
   }
 
   Future<void> loadLatestSession() async {
@@ -51,9 +75,6 @@ class _XPPageState extends State<XPPage> {
         ),
       );
     }
-    final totalXP = ActivityService.getTotalXP();
-    final level = ActivityService.getLevel();
-    final streak = ActivityService.getStreak();
 
     return Scaffold(
       backgroundColor: _bg,
