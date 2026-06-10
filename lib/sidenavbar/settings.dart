@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khel_yuva/res/colors.dart';
+import 'package:khel_yuva/sidenavbar/profile.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() => runApp(const SettingsApp());
 
@@ -18,7 +20,11 @@ class SettingsApp extends StatelessWidget {
 }
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  /// Pass the logged-in user's display name here.
+  /// Defaults to an empty string so it's always safe to use.
+  final String username;
+
+  const SettingsPage({super.key, this.username = ''});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -28,8 +34,27 @@ class _SettingsPageState extends State<SettingsPage> {
   bool pushNotifications = true;
   bool emailNotifications = false;
   String appearanceMode = 'dark';
+  String _username = '';
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
 
-  // ── Colors ──────────────────────────────────────────────────────────────────
+  Future<void> _loadUsername() async {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) return;
+
+    final data = await Supabase.instance.client
+        .from('profiles')
+        .select('name')
+        .eq('id', user.id)
+        .maybeSingle();
+
+    if (data != null && mounted) {
+      setState(() => _username = data['name'] ?? '');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── Profile Quick-View ─────────────────────────────────────────
-            _ProfileCard(),
+            _ProfileCard(username: _username),
             const SizedBox(height: 28),
 
             // ── Account ───────────────────────────────────────────────────
@@ -72,7 +97,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   icon: Icons.person_outline_rounded,
                   iconColor: AppColor.setaccent,
                   title: 'Edit Profile',
-                  onTap: () => Navigator.pushNamed(context, '/profile'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ProfilePage(),
+                      ),
+                    );
+                  },
                 ),
                 _SettingsDivider(),
                 _SettingsTile(
@@ -106,44 +138,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   subtitle: 'Get updates via email',
                   value: emailNotifications,
                   onChanged: (val) => setState(() => emailNotifications = val),
-                ),
-              ],
-            ),
-            const SizedBox(height: 28),
-
-            // ── Privacy ───────────────────────────────────────────────────
-            const _SectionHeader(title: 'Privacy & Security'),
-            const SizedBox(height: 12),
-            _SettingsGroup(
-              children: [
-                _SettingsTile(
-                  icon: Icons.privacy_tip_outlined,
-                  iconColor: const Color(0xFF6C63FF),
-                  title: 'Privacy Settings',
-                  onTap: () {},
-                ),
-                _SettingsDivider(),
-                _SettingsTile(
-                  icon: Icons.security_rounded,
-                  iconColor: const Color(0xFF00BFA5),
-                  title: 'Two-Factor Authentication',
-                  trailing: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF00BFA5).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Text(
-                      'OFF',
-                      style: TextStyle(
-                        color: Color(0xFF00BFA5),
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  onTap: () {},
                 ),
               ],
             ),
@@ -251,9 +245,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
 // ── Profile Card ──────────────────────────────────────────────────────────────
 class _ProfileCard extends StatelessWidget {
+  final String username;
+
   static const _accent = Color(0xFF6C63FF);
   static const _surface = Color(0xFF1A1A2E);
   static const _border = Color(0xFF2A2A4A);
+
+  const _ProfileCard({required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -286,27 +284,16 @@ class _ProfileCard extends StatelessWidget {
                 const Icon(Icons.person_rounded, color: Colors.white, size: 28),
           ),
           const SizedBox(width: 16),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hareem',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                SizedBox(height: 3),
-                Text(
-                  'Tap to edit your details',
-                  style: TextStyle(color: Color(0xFF9090B0), fontSize: 13),
-                ),
-              ],
+          Expanded(
+            child: Text(
+              username.isNotEmpty ? username : 'User',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
           ),
-          const Icon(Icons.chevron_right_rounded, color: Color(0xFF9090B0)),
         ],
       ),
     );
@@ -389,7 +376,6 @@ class _SettingsTile extends StatelessWidget {
     required this.icon,
     required this.iconColor,
     required this.title,
-    // ignore: unused_element_parameter
     this.subtitle,
     this.trailing,
     this.onTap,

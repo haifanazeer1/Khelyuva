@@ -49,9 +49,6 @@ class _SignInHero extends StatelessWidget {
             width: 70,
             height: 70,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF6C63FF), Color(0xFFE040FB)],
-              ),
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
@@ -61,7 +58,15 @@ class _SignInHero extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Icon(Icons.sports, color: Colors.white, size: 34),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: Image.asset(
+                'assets/logo.png', // ← your logo path here
+                width: 70,
+                height: 70,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           const SizedBox(height: 20),
           RichText(

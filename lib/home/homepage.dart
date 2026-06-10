@@ -11,6 +11,7 @@ import 'package:khel_yuva/sidenavbar/profile.dart';
 import 'package:khel_yuva/sidenavbar/settings.dart';
 import 'package:khel_yuva/bottomnavbar/progresspage.dart';
 import 'package:khel_yuva/widgets/login.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:khel_yuva/bottomnavbar/exercise_form/model_selection_screen.dart';
 import 'package:khel_yuva/home/personal_trainer/ptrainer.dart';
@@ -25,15 +26,31 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   int _navIndex = 0;
-
+  String _username = '';
   late AnimationController _pulseController;
   late Animation<double> _pulseAnim;
 
   late List<Widget> _pages; //  Important: NOT const
 
+  Future<void> _loadUsername() async {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) return;
+
+    final data = await Supabase.instance.client
+        .from('profiles')
+        .select('name')
+        .eq('id', user.id)
+        .maybeSingle();
+
+    if (data != null && mounted) {
+      setState(() => _username = data['name'] ?? '');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _loadUsername();
 
     _pulseController = AnimationController(
       vsync: this,
@@ -171,7 +188,7 @@ class _HomePageState extends State<HomePage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Hello Haifa 👋',
+                const Text('Hello there 👋',
                     style: TextStyle(color: KY.textSec, fontSize: 12)),
                 RichText(
                   text: const TextSpan(
@@ -1340,7 +1357,7 @@ class _HomePageState extends State<HomePage>
             decoration: const BoxDecoration(
               gradient: KY.gradientAccent,
             ),
-            child: const Row(
+            child: Row(
               children: [
                 CircleAvatar(
                   radius: 28,
@@ -1350,8 +1367,8 @@ class _HomePageState extends State<HomePage>
                 ),
                 SizedBox(width: 14),
                 Text(
-                  "Name",
-                  style: TextStyle(
+                  _username.isNotEmpty ? _username : 'User',
+                  style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
