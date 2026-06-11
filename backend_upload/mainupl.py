@@ -1,30 +1,21 @@
-# from fastapi import APIRouter, File, UploadFile, HTTPException
-# app = FastAPI(title="Fitness Video Analyzer API")
-# router=APIRouter()
-# ADD these
-from mediapipe.tasks.python.vision import PoseLandmarkerOptions, RunningMode
-from mediapipe.tasks.python import vision as mp_vision
-from mediapipe.tasks import python as mp_python
-import mediapipe as mp
-import urllib.request
-import os
-import tempfile
-import numpy as np
-import cv2
-from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-
-app = FastAPI()
-app.add_middleware(CORSMiddleware, allow_origins=[
-                   "*"], allow_methods=["*"], allow_headers=["*"])
-# @router.get("/")
-
-
-@app.post("/chat")
+from fastapi import APIRouter, File, UploadFile, HTTPException
+#app = FastAPI(title="Fitness Video Analyzer API")
+router=APIRouter()
+@router.get("/")
 def home():
     return {"message": "API is running"}
+#from fastapi.middleware.cors import CORSMiddleware
+import cv2
+import numpy as np
+import tempfile
+import os
+import urllib.request
 
-# from fastapi.middleware.cors import CORSMiddleware
+import mediapipe as mp
+from mediapipe.tasks import python as mp_python
+from mediapipe.tasks.python import vision as mp_vision
+from mediapipe.tasks.python.vision import PoseLandmarkerOptions, RunningMode
+
 
 
 '''app.add_middleware(
@@ -117,18 +108,12 @@ LEFT_KNEE = 25
 LEFT_ANKLE = 27
 
 
-# @router.get("/")
-# def root():
-#    return {"status": "Fitness Analyzer API is running"}
-
-
-# @router.post("/analyze-video")
-@app.get("/")
+@router.get("/")
 def root():
     return {"status": "Fitness Analyzer API is running"}
 
 
-@app.post("/analyze-video")  # ← app not router
+@router.post("/analyze-video")
 async def analyze_video(file: UploadFile = File(...)):
 
     allowed_types = ["video/mp4", "video/quicktime",
@@ -177,8 +162,7 @@ async def analyze_video(file: UploadFile = File(...)):
                 continue
 
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB,
-                                data=np.ascontiguousarray(rgb))
+            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(rgb))
             timestamp_ms = int(cap.get(cv2.CAP_PROP_POS_MSEC))
             try:
                 result = landmarker.detect_for_video(mp_image, timestamp_ms)

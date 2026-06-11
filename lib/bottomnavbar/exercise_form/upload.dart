@@ -26,7 +26,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
   Map<String, dynamic>? _analysisResult;
 
   // Use 10.0.2.2 for Android emulator
-  static const String _backendUrl = "http://192.168.29.21:8001";
+  static const String _backendUrl = "http://127.0.0.1:8000";
 
   //PICK VIDEO
   Future<void> _pickVideo() async {
@@ -74,7 +74,7 @@ class _UploadFormScreenState extends State<UploadFormScreen> {
     try {
       final request = http.MultipartRequest(
         'POST',
-        Uri.parse('$_backendUrl/analyze-video'),
+        Uri.parse('$_backendUrl/upload/analyze-video'),
       );
 
       request.files.add(
