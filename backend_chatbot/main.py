@@ -14,7 +14,7 @@ router = APIRouter()
 )'''
 
 client = genai.Client(
-    api_key="AIzaSyBjNeaIDWTALLcAWbZYdGhxVFzPA_Oq8-8")
+    api_key="")
 
 SYSTEM_PROMPT = """You are KhelYuva AI, a friendly and knowledgeable fitness assistant. 
 You specialize in:
@@ -35,7 +35,7 @@ class ChatRequest(BaseModel):
     conversation_history: list = []
 
 
-@router.post("/chat")
+@router.post("/")
 def chat(req: ChatRequest):
     try:
         # Build conversation history for context
